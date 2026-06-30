@@ -6,7 +6,8 @@
     <title>Panel Warga Belajar PKBM</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://unpkg.com/html5-qrcode"></script>
+    <!-- Menggunakan CDN Html5Qrcode yang stabil -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 </head>
 <body class="bg-slate-50 min-h-screen text-slate-800 flex flex-col md:flex-row">
 
@@ -88,6 +89,7 @@
                         <p class="text-xs text-slate-500 mt-0.5">Arahkan kamera ponsel kamu ke QR Code yang ditampilkan oleh Guru di depan kelas.</p>
                     </div>
                     
+                    <!-- Area Tampilan Scanner Kamera -->
                     <div class="overflow-hidden rounded-xl bg-slate-950 border-4 border-slate-800 relative shadow-inner aspect-square w-full">
                         <div id="reader" class="w-full h-full"></div>
                     </div>
@@ -102,9 +104,9 @@
     </main>
 
     <script>
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxq8NxzadAJgveCiN25WHg-9O3kFmhe3zXvKr7JzONBxtf7UaIO1BD4SOajOT8906VImQ/exec"; // PASTE URL WEB APP KAMU DI SINI
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxq8NxzadAJgveCiN25WHg-9O3kFmhe3zXvKr7JzONBxtf7UaIO1BD4SOajOT8906VImQ/exec"; // URL WEB APP ANDA
         let userLogin = null;
-        let html5QrcodeScanner = null;
+        let html5QrcodeInstance = null; // Menggunakan instance kelas kontrol kamera mentah
 
         window.onload = function() {
             const sessionData = sessionStorage.getItem('userLogin');
@@ -122,8 +124,8 @@
             muatDataDashboardSiswa();
         };
 
-        function gantiMenu(targetPanel, elemenTombol) {
-            matikanScanner();
+        async function gantiMenu(targetPanel, elemenTombol) {
+            await matikanScanner();
 
             document.querySelectorAll('.menu-panel').forEach(p => p.classList.add('hidden'));
             document.getElementById('panel-' + targetPanel).classList.remove('hidden');
@@ -144,7 +146,6 @@
             elemenTombol.classList.remove('text-slate-400', 'hover:bg-slate-800', 'hover:text-slate-200', 'font-medium');
         }
 
-        // AMBIL DATA UJIAN, MATERI, & RIWAYAT ABSEN DARI DATABASE APPS SCRIPT
         async function muatDataDashboardSiswa() {
             const containerUjian = document.getElementById('listUjianSiswa');
             const containerAgenda = document.getElementById('listAgendaSiswa');
@@ -160,14 +161,14 @@
                     body: JSON.stringify({ 
                         action: 'getSiswaDashboard', 
                         kelas: userLogin.kelas,
-                        id_siswa: userLogin.id_user // Mengirim ID siswa agar backend bisa memfilter riwayat absensi
+                        id_siswa: userLogin.id_user 
                     })
                 });
                 const result = await response.json();
                 
                 if (result.status === "success") {
-                    // Render Bagian Ujian
-                    if (result.ujian.length === 0) {
+                    // Render Jadwal Ujian
+                    if (!result.ujian || result.ujian.length === 0) {
                         containerUjian.innerHTML = `<p class="text-xs text-slate-400 italic py-3">Tidak ada jadwal ujian aktif untuk kelasmu saat ini.</p>`;
                     } else {
                         containerUjian.innerHTML = "";
@@ -183,8 +184,8 @@
                         });
                     }
 
-                    // Render Bagian Riwayat Modul Pembelajaran
-                    if (result.agenda.length === 0) {
+                    // Render Materi Pengajaran Guru
+                    if (!result.agenda || result.agenda.length === 0) {
                         containerAgenda.innerHTML = `<p class="text-xs text-slate-400 italic py-3">Belum ada rangkuman materi mengajar dari gurumu.</p>`;
                     } else {
                         containerAgenda.innerHTML = "";
@@ -201,7 +202,7 @@
                         });
                     }
 
-                    // Render Bagian Riwayat Presensi (Fitur Baru)
+                    // Render Riwayat Presensi Kehadiran Siswa
                     if (!result.riwayat_absen || result.riwayat_absen.length === 0) {
                         containerRiwayat.innerHTML = `<p class="text-xs text-slate-400 italic py-3">Kamu belum memiliki riwayat presensi kehadiran.</p>`;
                     } else {
@@ -220,6 +221,8 @@
                                 </div>`;
                         });
                     }
+                } else {
+                    throw new Error("Respons status gagal dari server.");
                 }
             } catch (e) {
                 containerUjian.innerHTML = `<p class="text-xs text-red-500">Gagal memuat info ujian.</p>`;
@@ -228,23 +231,50 @@
             }
         }
 
-        // MENYALAKAN FUNGSI EMULSI SCANNER KAMERA
+        // PERBAIKAN UTAMA: OPTIMASI PENYALAKAN KAMERA KHUSUS SAFARI/iOS
         function mulaiScanner() {
             const statusDiv = document.getElementById('scanStatus');
             statusDiv.className = "p-3 bg-amber-50 text-amber-700 border border-amber-200 rounded-xl text-xs font-bold font-mono animate-pulse";
             statusDiv.innerHTML = "Menginisialisasi Kamera Ponsel...";
 
-            html5QrcodeScanner = new Html5QrcodeScanner("reader", { 
+            // Menggunakan Html5Qrcode murni demi kontrol parameter playsinline & konfigurasi rasio video secara penuh
+            html5QrcodeInstance = new Html5Qrcode("reader");
+
+            const config = { 
                 fps: 10, 
-                qrbox: { width: 250, height: 250 },
-                rememberLastUsedCamera: true
-            }, false);
-            
-            html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+                qrbox: function(viewfinderWidth, viewfinderHeight) {
+                    const minEdge = Math.min(viewfinderWidth, viewfinderHeight);
+                    const boxSize = Math.floor(minEdge * 0.7);
+                    return { width: boxSize, height: boxSize };
+                },
+                aspectRatio: 1.0 // Mengunci aspek rasio video 1:1 agar Safari iOS tidak crash mendeteksi resolusi lensa
+            };
+
+            // Mengaktifkan kamera belakang (environment) secara paksa
+            html5QrcodeInstance.start(
+                { facingMode: "environment" }, 
+                config, 
+                onScanSuccess,
+                onScanFailure
+            ).then(() => {
+                statusDiv.className = "p-3 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-xl text-xs font-bold font-mono";
+                statusDiv.innerHTML = "Kamera Aktif! Silakan Pindai Barcode Guru.";
+                
+                // Menambahkan atribut krusial iOS ke elemen video yang baru saja dibuat
+                const videoElement = document.querySelector("#reader video");
+                if (videoElement) {
+                    videoElement.setAttribute("playsinline", "true");
+                    videoElement.setAttribute("webkit-playsinline", "true");
+                }
+            }).catch(err => {
+                console.error("Gagal inisialisasi kamera utama:", err);
+                statusDiv.className = "p-3 bg-rose-50 text-rose-700 border border-rose-200 rounded-xl text-xs font-bold";
+                statusDiv.innerHTML = "Gagal Mengakses Kamera Perangkat. Pastikan Izin Diperbolehkan.";
+            });
         }
 
         async function onScanSuccess(decodedText) {
-            matikanScanner();
+            await matikanScanner();
             const statusDiv = document.getElementById('scanStatus');
             statusDiv.className = "p-3 bg-blue-50 text-blue-700 border border-blue-200 rounded-xl text-xs font-bold font-mono animate-pulse";
             statusDiv.innerHTML = "QR Berhasil Dibaca! Mengirim Presensi...";
@@ -275,19 +305,32 @@
             }
         }
 
-        function onScanFailure(error) {}
-
-        function matikanScanner() {
-            if (html5QrcodeScanner) {
-                html5QrcodeScanner.clear().catch(err => console.error("Gagal mematikan scanner", err));
-                html5QrcodeScanner = null;
-                document.getElementById('scanStatus').className = "p-3 bg-slate-100 text-slate-600 rounded-xl text-xs font-bold font-mono";
-                document.getElementById('scanStatus').innerHTML = "Kamera Dinonaktifkan.";
-            }
+        function onScanFailure(error) {
+            // Callback pasif agar pemindaian berjalan kontinu tanpa interupsi log error berlebih
         }
 
-        function logout() { 
-            matikanScanner();
+        async function matikanScanner() {
+            if (html5QrcodeInstance && html5QrcodeInstance.isScanning) {
+                try {
+                    await html5QrcodeInstance.stop();
+                } catch (err) {
+                    console.error("Gagal menghentikan aliran kamera", err);
+                }
+            }
+            html5QrcodeInstance = null;
+            
+            const statusContainer = document.getElementById('scanStatus');
+            if (statusContainer) {
+                statusContainer.className = "p-3 bg-slate-100 text-slate-600 rounded-xl text-xs font-bold font-mono";
+                statusContainer.innerHTML = "Kamera Dinonaktifkan.";
+            }
+            
+            const readerDiv = document.getElementById('reader');
+            if (readerDiv) readerDiv.innerHTML = ""; // Bersihkan sisa rendering elemen video DOM
+        }
+
+        async function logout() { 
+            await matikanScanner();
             sessionStorage.clear(); 
             window.location.href = "index.html"; 
         }
