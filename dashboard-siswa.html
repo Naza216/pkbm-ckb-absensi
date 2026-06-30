@@ -6,7 +6,6 @@
     <title>Panel Warga Belajar PKBM</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Menggunakan CDN Html5Qrcode yang stabil -->
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 </head>
 <body class="bg-slate-50 min-h-screen text-slate-800 flex flex-col md:flex-row">
@@ -89,7 +88,6 @@
                         <p class="text-xs text-slate-500 mt-0.5">Arahkan kamera ponsel kamu ke QR Code yang ditampilkan oleh Guru di depan kelas.</p>
                     </div>
                     
-                    <!-- Area Tampilan Scanner Kamera -->
                     <div class="overflow-hidden rounded-xl bg-slate-950 border-4 border-slate-800 relative shadow-inner aspect-square w-full">
                         <div id="reader" class="w-full h-full"></div>
                     </div>
@@ -104,9 +102,9 @@
     </main>
 
     <script>
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxq8NxzadAJgveCiN25WHg-9O3kFmhe3zXvKr7JzONBxtf7UaIO1BD4SOajOT8906VImQ/exec"; // URL WEB APP ANDA
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxLvqG4peqX-et8GGZUUCCXjMgsGJTuDBIMwDqkSkLJwytt-CFiE5WlZjRhxRTvS6OxYw/exec"; 
         let userLogin = null;
-        let html5QrcodeInstance = null; // Menggunakan instance kelas kontrol kamera mentah
+        let html5QrcodeInstance = null; 
 
         window.onload = function() {
             const sessionData = sessionStorage.getItem('userLogin');
@@ -177,7 +175,7 @@
                                 <div class="pt-3 first:pt-0 flex justify-between items-start">
                                     <div>
                                         <h4 class="font-bold text-sm text-slate-800">${u.mata_pelajaran}</h4>
-                                        <p class="text-xs text-slate-500 font-medium">Pelaksanaan: ${u.tanggal} (${u.jam} WIB)</p>
+                                        <p class="text-xs text-slate-500 font-medium">Pelaksanaan: ${u.tanggal} (${u.jam})</p>
                                     </div>
                                     <span class="px-2 py-0.5 text-[10px] font-black bg-rose-100 text-rose-700 border border-rose-200 rounded-md">${u.jenis_ujian}</span>
                                 </div>`;
@@ -202,12 +200,13 @@
                         });
                     }
 
-                    // Render Riwayat Presensi Kehadiran Siswa
+                    // FIX SINKRONISASI: Render Riwayat Presensi Kehadiran Terintegrasi dengan Backend Baru
                     if (!result.riwayat_absen || result.riwayat_absen.length === 0) {
                         containerRiwayat.innerHTML = `<p class="text-xs text-slate-400 italic py-3">Kamu belum memiliki riwayat presensi kehadiran.</p>`;
                     } else {
                         containerRiwayat.innerHTML = "";
                         result.riwayat_absen.forEach(r => {
+                            const badgeColor = r.status === "HADIR" ? "bg-emerald-100 text-emerald-700 border-emerald-200" : "bg-rose-100 text-rose-700 border-rose-200";
                             containerRiwayat.innerHTML += `
                                 <div class="pt-3 first:pt-0 flex justify-between items-center">
                                     <div>
@@ -215,8 +214,8 @@
                                         <p class="text-[11px] text-slate-500 font-medium">Materi: ${r.materi}</p>
                                     </div>
                                     <div class="text-right">
-                                        <span class="px-2 py-0.5 text-[10px] font-black bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-md">HADIR</span>
-                                        <p class="text-[10px] text-slate-400 font-mono mt-1">${r.waktu_absen || r.tanggal.split('T')[0]}</p>
+                                        <span class="px-2 py-0.5 text-[10px] font-black border rounded-md ${badgeColor}">${r.status}</span>
+                                        <p class="text-[10px] text-slate-400 font-mono mt-1">${r.waktu_absen}</p>
                                     </div>
                                 </div>`;
                         });
@@ -231,13 +230,11 @@
             }
         }
 
-        // PERBAIKAN UTAMA: OPTIMASI PENYALAKAN KAMERA KHUSUS SAFARI/iOS
         function mulaiScanner() {
             const statusDiv = document.getElementById('scanStatus');
             statusDiv.className = "p-3 bg-amber-50 text-amber-700 border border-amber-200 rounded-xl text-xs font-bold font-mono animate-pulse";
             statusDiv.innerHTML = "Menginisialisasi Kamera Ponsel...";
 
-            // Menggunakan Html5Qrcode murni demi kontrol parameter playsinline & konfigurasi rasio video secara penuh
             html5QrcodeInstance = new Html5Qrcode("reader");
 
             const config = { 
@@ -247,10 +244,9 @@
                     const boxSize = Math.floor(minEdge * 0.7);
                     return { width: boxSize, height: boxSize };
                 },
-                aspectRatio: 1.0 // Mengunci aspek rasio video 1:1 agar Safari iOS tidak crash mendeteksi resolusi lensa
+                aspectRatio: 1.0 
             };
 
-            // Mengaktifkan kamera belakang (environment) secara paksa
             html5QrcodeInstance.start(
                 { facingMode: "environment" }, 
                 config, 
@@ -260,7 +256,6 @@
                 statusDiv.className = "p-3 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-xl text-xs font-bold font-mono";
                 statusDiv.innerHTML = "Kamera Aktif! Silakan Pindai Barcode Guru.";
                 
-                // Menambahkan atribut krusial iOS ke elemen video yang baru saja dibuat
                 const videoElement = document.querySelector("#reader video");
                 if (videoElement) {
                     videoElement.setAttribute("playsinline", "true");
@@ -290,6 +285,7 @@
                 });
                 const result = await response.json();
                 
+                // Respons sukses / gagal diatur secara dinamis mengikuti sistem proteksi backend baru
                 if (result.status === "success") {
                     statusDiv.className = "p-3 bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-xl text-xs font-black";
                     statusDiv.innerHTML = `🎉 ${result.message}`;
@@ -305,9 +301,7 @@
             }
         }
 
-        function onScanFailure(error) {
-            // Callback pasif agar pemindaian berjalan kontinu tanpa interupsi log error berlebih
-        }
+        function onScanFailure(error) {}
 
         async function matikanScanner() {
             if (html5QrcodeInstance && html5QrcodeInstance.isScanning) {
@@ -326,7 +320,7 @@
             }
             
             const readerDiv = document.getElementById('reader');
-            if (readerDiv) readerDiv.innerHTML = ""; // Bersihkan sisa rendering elemen video DOM
+            if (readerDiv) readerDiv.innerHTML = ""; 
         }
 
         async function logout() { 
