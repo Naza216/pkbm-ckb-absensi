@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Warga Belajar PKBM</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/html5-qrcode"></script>
+</head>
+<body class="bg-slate-50 min-h-screen text-slate-800 flex flex-col md:flex-row">
+
+    <aside class="w-full md:w-64 bg-slate-900 text-slate-200 flex flex-col md:fixed md:inset-y-0 md:left-0 z-50 shadow-xl">
+        <div class="p-5 border-b border-slate-800 bg-slate-950 flex justify-between items-center md:block">
+            <div>
+                <h1 class="text-lg font-black tracking-wider text-sky-400 flex items-center gap-2">
+                    <i class="fa-solid fa-graduation-cap"></i> PKBM SISWA
+                </h1>
+                <p id="kelasBadge" class="text-xs text-slate-400 font-medium mt-0.5">Kelas: Loading...</p>
+            </div>
+            <button onclick="logout()" class="md:hidden bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition">
+                <i class="fa-solid fa-power-off"></i>
+            </button>
+        </div>
+        
+        <nav class="flex-1 p-4 space-y-1.5">
+            <button onclick="gantiMenu('Beranda', this)" class="menu-btn w-full bg-sky-600 text-white font-bold flex items-center gap-3 px-4 py-3 rounded-xl transition text-sm cursor-pointer text-left">
+                <i class="fa-solid fa-house w-5 text-center"></i> Beranda & Info Kelas
+            </button>
+            <button onclick="gantiMenu('ScanQR', this)" class="menu-btn w-full text-slate-400 hover:bg-slate-800 hover:text-slate-200 font-medium flex items-center gap-3 px-4 py-3 rounded-xl transition text-sm cursor-pointer text-left">
+                <i class="fa-solid fa-qrcode w-5 text-center"></i> Scan Presensi QR
+            </button>
+        </nav>
+
+        <div class="hidden md:flex p-4 border-t border-slate-800 bg-slate-950 justify-between items-center">
+            <span id="namaSiswa" class="text-xs font-semibold text-slate-300 truncate max-w-[120px]">Siswa...</span>
+            <button onclick="logout()" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer">
+                <i class="fa-solid fa-power-off"></i> Keluar
+            </button>
+        </div>
+    </aside>
+
+    <main class="flex-1 md:pl-64 min-h-screen flex flex-col">
+        
+        <header class="bg-white border-b border-slate-200 px-6 py-5 flex justify-between items-center shadow-xs">
+            <div>
+                <h2 id="judulHalaman" class="text-xl font-black text-slate-800">Beranda Belajar</h2>
+                <p class="text-xs text-slate-500 mt-0.5">Pantau jadwal pelajaran harian, agenda kelas, dan pengumuman ujian resmi.</p>
+            </div>
+        </header>
+
+        <div class="p-6 flex-1 space-y-6">
+
+            <div id="panel-Beranda" class="menu-panel space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    
+                    <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4">
+                        <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2 text-rose-600">
+                            <i class="fa-solid fa-bell"></i> Jadwal Evaluasi / Ujian Resmi
+                        </h3>
+                        <div id="listUjianSiswa" class="space-y-3 divide-y divide-slate-100 max-h-60 overflow-y-auto pr-1">
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4">
+                        <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2 text-emerald-600">
+                            <i class="fa-solid fa-book-open"></i> Modul & Pembahasan Materi Guru
+                        </h3>
+                        <div id="listAgendaSiswa" class="space-y-3 divide-y divide-slate-100 max-h-60 overflow-y-auto pr-1">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4">
+                    <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2 text-sky-600">
+                        <i class="fa-solid fa-clock-rotate-left"></i> Riwayat Presensi Kehadiran Kamu
+                    </h3>
+                    <div id="listRiwayatAbsen" class="space-y-3 divide-y divide-slate-100 max-h-60 overflow-y-auto pr-1">
+                    </div>
+                </div>
+            </div>
+
+            <div id="panel-ScanQR" class="menu-panel hidden max-w-md mx-auto space-y-6">
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-center space-y-4">
+                    <div>
+                        <h3 class="font-black text-slate-800 text-lg">Presensi Berbasis QR Code</h3>
+                        <p class="text-xs text-slate-500 mt-0.5">Arahkan kamera ponsel kamu ke QR Code yang ditampilkan oleh Guru di depan kelas.</p>
+                    </div>
+                    
+                    <div class="overflow-hidden rounded-xl bg-slate-950 border-4 border-slate-800 relative shadow-inner aspect-square w-full">
+                        <div id="reader" class="w-full h-full"></div>
+                    </div>
+
+                    <div id="scanStatus" class="p-3 bg-slate-100 text-slate-600 rounded-xl text-xs font-bold font-mono">
+                        Menunggu Kamera Diaktifkan...
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxq8NxzadAJgveCiN25WHg-9O3kFmhe3zXvKr7JzONBxtf7UaIO1BD4SOajOT8906VImQ/exec"; // PASTE URL WEB APP KAMU DI SINI
+        let userLogin = null;
+        let html5QrcodeScanner = null;
+
+        window.onload = function() {
+            const sessionData = sessionStorage.getItem('userLogin');
+            if (!sessionData) { window.location.href = "index.html"; return; }
+            userLogin = JSON.parse(sessionData);
+            
+            if (userLogin.role !== "siswa") {
+                alert("Akses ditolak! Halaman ini khusus untuk Siswa.");
+                window.location.href = "index.html"; return;
+            }
+            
+            document.getElementById('namaSiswa').innerText = userLogin.nama_lengkap;
+            document.getElementById('kelasBadge').innerText = "Kelas: " + userLogin.kelas;
+            
+            muatDataDashboardSiswa();
+        };
+
+        function gantiMenu(targetPanel, elemenTombol) {
+            matikanScanner();
+
+            document.querySelectorAll('.menu-panel').forEach(p => p.classList.add('hidden'));
+            document.getElementById('panel-' + targetPanel).classList.remove('hidden');
+            
+            if (targetPanel === 'Beranda') {
+                document.getElementById('judulHalaman').innerText = "Beranda Belajar";
+                muatDataDashboardSiswa();
+            } else if (targetPanel === 'ScanQR') {
+                document.getElementById('judulHalaman').innerText = "Pindai Absensi Kehadiran";
+                mulaiScanner();
+            }
+
+            document.querySelectorAll('.menu-btn').forEach(b => {
+                b.classList.remove('bg-sky-600', 'text-white', 'font-bold');
+                b.classList.add('text-slate-400', 'hover:bg-slate-800', 'hover:text-slate-200', 'font-medium');
+            });
+            elemenTombol.classList.add('bg-sky-600', 'text-white', 'font-bold');
+            elemenTombol.classList.remove('text-slate-400', 'hover:bg-slate-800', 'hover:text-slate-200', 'font-medium');
+        }
+
+        // AMBIL DATA UJIAN, MATERI, & RIWAYAT ABSEN DARI DATABASE APPS SCRIPT
+        async function muatDataDashboardSiswa() {
+            const containerUjian = document.getElementById('listUjianSiswa');
+            const containerAgenda = document.getElementById('listAgendaSiswa');
+            const containerRiwayat = document.getElementById('listRiwayatAbsen');
+            
+            containerUjian.innerHTML = `<p class="text-xs text-slate-400 italic py-4 animate-pulse">Menyelaraskan info ujian...</p>`;
+            containerAgenda.innerHTML = `<p class="text-xs text-slate-400 italic py-4 animate-pulse">Memuat catatan modul...</p>`;
+            containerRiwayat.innerHTML = `<p class="text-xs text-slate-400 italic py-4 animate-pulse">Mengambil riwayat presensi...</p>`;
+            
+            try {
+                const response = await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ 
+                        action: 'getSiswaDashboard', 
+                        kelas: userLogin.kelas,
+                        id_siswa: userLogin.id_user // Mengirim ID siswa agar backend bisa memfilter riwayat absensi
+                    })
+                });
+                const result = await response.json();
+                
+                if (result.status === "success") {
+                    // Render Bagian Ujian
+                    if (result.ujian.length === 0) {
+                        containerUjian.innerHTML = `<p class="text-xs text-slate-400 italic py-3">Tidak ada jadwal ujian aktif untuk kelasmu saat ini.</p>`;
+                    } else {
+                        containerUjian.innerHTML = "";
+                        result.ujian.forEach(u => {
+                            containerUjian.innerHTML += `
+                                <div class="pt-3 first:pt-0 flex justify-between items-start">
+                                    <div>
+                                        <h4 class="font-bold text-sm text-slate-800">${u.mata_pelajaran}</h4>
+                                        <p class="text-xs text-slate-500 font-medium">Pelaksanaan: ${u.tanggal} (${u.jam} WIB)</p>
+                                    </div>
+                                    <span class="px-2 py-0.5 text-[10px] font-black bg-rose-100 text-rose-700 border border-rose-200 rounded-md">${u.jenis_ujian}</span>
+                                </div>`;
+                        });
+                    }
+
+                    // Render Bagian Riwayat Modul Pembelajaran
+                    if (result.agenda.length === 0) {
+                        containerAgenda.innerHTML = `<p class="text-xs text-slate-400 italic py-3">Belum ada rangkuman materi mengajar dari gurumu.</p>`;
+                    } else {
+                        containerAgenda.innerHTML = "";
+                        result.agenda.forEach(a => {
+                            containerAgenda.innerHTML += `
+                                <div class="pt-3 first:pt-0 space-y-0.5">
+                                    <div class="flex justify-between text-xs text-slate-400 font-bold">
+                                        <span>${a.mata_pelajaran}</span>
+                                        <span>${a.tanggal.split('T')[0]}</span>
+                                    </div>
+                                    <h4 class="font-semibold text-sm text-slate-700">${a.materi}</h4>
+                                    <p class="text-xs text-slate-500 italic font-medium">${a.keterangan || 'Tidak ada catatan tambahan.'}</p>
+                                </div>`;
+                        });
+                    }
+
+                    // Render Bagian Riwayat Presensi (Fitur Baru)
+                    if (!result.riwayat_absen || result.riwayat_absen.length === 0) {
+                        containerRiwayat.innerHTML = `<p class="text-xs text-slate-400 italic py-3">Kamu belum memiliki riwayat presensi kehadiran.</p>`;
+                    } else {
+                        containerRiwayat.innerHTML = "";
+                        result.riwayat_absen.forEach(r => {
+                            containerRiwayat.innerHTML += `
+                                <div class="pt-3 first:pt-0 flex justify-between items-center">
+                                    <div>
+                                        <h4 class="font-bold text-sm text-slate-800">${r.mata_pelajaran}</h4>
+                                        <p class="text-[11px] text-slate-500 font-medium">Materi: ${r.materi}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="px-2 py-0.5 text-[10px] font-black bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-md">HADIR</span>
+                                        <p class="text-[10px] text-slate-400 font-mono mt-1">${r.waktu_absen || r.tanggal.split('T')[0]}</p>
+                                    </div>
+                                </div>`;
+                        });
+                    }
+                }
+            } catch (e) {
+                containerUjian.innerHTML = `<p class="text-xs text-red-500">Gagal memuat info ujian.</p>`;
+                containerAgenda.innerHTML = `<p class="text-xs text-red-500">Gagal memuat info materi.</p>`;
+                containerRiwayat.innerHTML = `<p class="text-xs text-red-500">Gagal memuat riwayat presensi.</p>`;
+            }
+        }
+
+        // MENYALAKAN FUNGSI EMULSI SCANNER KAMERA
+        function mulaiScanner() {
+            const statusDiv = document.getElementById('scanStatus');
+            statusDiv.className = "p-3 bg-amber-50 text-amber-700 border border-amber-200 rounded-xl text-xs font-bold font-mono animate-pulse";
+            statusDiv.innerHTML = "Menginisialisasi Kamera Ponsel...";
+
+            html5QrcodeScanner = new Html5QrcodeScanner("reader", { 
+                fps: 10, 
+                qrbox: { width: 250, height: 250 },
+                rememberLastUsedCamera: true
+            }, false);
+            
+            html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+        }
+
+        async function onScanSuccess(decodedText) {
+            matikanScanner();
+            const statusDiv = document.getElementById('scanStatus');
+            statusDiv.className = "p-3 bg-blue-50 text-blue-700 border border-blue-200 rounded-xl text-xs font-bold font-mono animate-pulse";
+            statusDiv.innerHTML = "QR Berhasil Dibaca! Mengirim Presensi...";
+
+            try {
+                const response = await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'scanAbsen',
+                        id_agenda: decodedText,
+                        id_siswa: userLogin.id_user
+                    })
+                });
+                const result = await response.json();
+                
+                if (result.status === "success") {
+                    statusDiv.className = "p-3 bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-xl text-xs font-black";
+                    statusDiv.innerHTML = `🎉 ${result.message}`;
+                    alert(`Presensi Sukses!\n${result.message}`);
+                } else {
+                    statusDiv.className = "p-3 bg-rose-100 text-rose-800 border border-rose-300 rounded-xl text-xs font-bold";
+                    statusDiv.innerHTML = `❌ ${result.message}`;
+                    alert(`Gagal Melakukan Presensi:\n${result.message}`);
+                }
+            } catch (error) {
+                alert("Gangguan jaringan, gagal terhubung ke server PKBM.");
+                statusDiv.innerHTML = "Gagal Sinkronisasi Jaringan.";
+            }
+        }
+
+        function onScanFailure(error) {}
+
+        function matikanScanner() {
+            if (html5QrcodeScanner) {
+                html5QrcodeScanner.clear().catch(err => console.error("Gagal mematikan scanner", err));
+                html5QrcodeScanner = null;
+                document.getElementById('scanStatus').className = "p-3 bg-slate-100 text-slate-600 rounded-xl text-xs font-bold font-mono";
+                document.getElementById('scanStatus').innerHTML = "Kamera Dinonaktifkan.";
+            }
+        }
+
+        function logout() { 
+            matikanScanner();
+            sessionStorage.clear(); 
+            window.location.href = "index.html"; 
+        }
+    </script>
+</body>
+</html>

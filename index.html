@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masuk - Sistem Akademik PKBM</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 min-h-screen flex items-center justify-center p-4">
+
+    <div class="w-full max-w-md bg-white/10 backdrop-blur-md border border-white/10 p-8 rounded-3xl shadow-2xl space-y-6">
+        
+        <div class="text-center space-y-2">
+            <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-tr from-sky-500 to-emerald-500 text-white text-2xl shadow-lg">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <h2 class="text-2xl font-black tracking-tight text-white">Sistem Gateway PKBM</h2>
+            <p class="text-xs text-slate-400 font-medium">Silakan masuk menggunakan akun resmi Anda</p>
+        </div>
+
+        <form id="formLogin" class="space-y-4">
+            <div>
+                <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Username / NISN</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                        <i class="fa-solid fa-user text-xs"></i>
+                    </span>
+                    <input type="text" id="username" required class="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-sm text-white focus:ring-2 focus:ring-sky-500 focus:outline-none placeholder-slate-500 transition" placeholder="Masukkan username">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Kata Sandi</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                        <i class="fa-solid fa-lock text-xs"></i>
+                    </span>
+                    <input type="password" id="password" required class="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-sm text-white focus:ring-2 focus:ring-sky-500 focus:outline-none placeholder-slate-500 transition" placeholder="••••••••">
+                </div>
+            </div>
+
+            <button type="submit" id="btnLogin" class="w-full mt-2 bg-gradient-to-r from-sky-500 to-emerald-500 hover:opacity-90 text-white font-bold py-3.5 rounded-xl transition shadow-lg cursor-pointer text-sm">
+                <i class="fa-solid fa-right-to-bracket mr-1.5"></i> Autentikasi Akun
+            </button>
+        </form>
+
+        <div class="text-center pt-2">
+            <p class="text-xs text-slate-400">Warga belajar baru? 
+                <button onclick="bukaModalRegister(true)" class="text-sky-400 font-bold hover:underline bg-transparent border-none cursor-pointer focus:outline-none">Daftar Akun Di Sini</button>
+            </p>
+        </div>
+
+    </div>
+
+    <div id="modalRegister" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+        <div class="w-full max-w-md bg-slate-900 border border-slate-800 p-6 rounded-3xl shadow-2xl space-y-4 relative">
+            
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <div>
+                    <h3 class="text-lg font-black text-white"><i class="fa-solid fa-user-plus text-sky-400 mr-2"></i>Registrasi Warga Belajar</h3>
+                    <p class="text-[11px] text-slate-400 mt-0.5">Buat akun agar nama Anda terdaftar di lembar absensi kelas.</p>
+                </div>
+                <button onclick="bukaModalRegister(false)" class="text-slate-400 hover:text-white cursor-pointer p-1 text-sm"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <form id="formRegister" class="space-y-3.5">
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Nama Lengkap Siswa</label>
+                    <input type="text" id="regNama" required class="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white focus:ring-2 focus:ring-sky-500 focus:outline-none" placeholder="Contoh: Budi Santoso">
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Username / NISN (Untuk Login)</label>
+                    <input type="text" id="regUsername" required class="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white focus:ring-2 focus:ring-sky-500 focus:outline-none" placeholder="Contoh: 22230104">
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Pilih Kelompok Belajar / Kelas</label>
+                    <input type="text" id="regKelas" required class="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white focus:ring-2 focus:ring-sky-500 focus:outline-none" placeholder="Contoh: B Wangunharja">
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Kata Sandi (Password)</label>
+                    <input type="password" id="regPassword" required class="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white focus:ring-2 focus:ring-sky-500 focus:outline-none" placeholder="••••••••">
+                </div>
+
+                <button type="submit" id="btnSimpanRegister" class="w-full mt-2 bg-gradient-to-r from-sky-500 to-emerald-500 hover:opacity-90 text-white font-bold py-3 rounded-xl transition shadow-md cursor-pointer text-sm">
+                    <i class="fa-solid fa-user-check mr-1"></i> Selesaikan Pendaftaran
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxq8NxzadAJgveCiN25WHg-9O3kFmhe3zXvKr7JzONBxtf7UaIO1BD4SOajOT8906VImQ/exec"; // PASTE URL WEB APP KAMU DI SINI
+
+        // FUNGSI KONTROL POP-UP MODAL
+        function bukaModalRegister(status) {
+            const modal = document.getElementById('modalRegister');
+            if(status) {
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+                document.getElementById('formRegister').reset();
+            }
+        }
+
+        // AJAK SUBMIT FORM LOGIN
+        document.getElementById('formLogin').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnLogin');
+            btn.disabled = true; btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Memeriksa...`;
+
+            try {
+                const response = await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'login',
+                        username: document.getElementById('username').value,
+                        password: document.getElementById('password').value
+                    })
+                });
+                const result = await response.json();
+
+                if (result.status === "success") {
+                    sessionStorage.setItem('userLogin', JSON.stringify(result.user));
+                    if (result.user.role === "admin") window.location.href = "dashboard-admin.html";
+                    else if (result.user.role === "guru") window.location.href = "dashboard-guru.html";
+                    else if (result.user.role === "siswa") window.location.href = "dashboard-siswa.html";
+                } else {
+                    alert(result.message);
+                }
+            } catch (error) { alert("Gagal terhubung dengan server database."); }
+            finally { btn.disabled = false; btn.innerHTML = `<i class="fa-solid fa-right-to-bracket mr-1.5"></i> Autentikasi Akun`; }
+        });
+
+        // AJAX SUBMIT FORM REGISTRASI SISWA BARU
+        document.getElementById('formRegister').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnSimpanRegister');
+            btn.disabled = true; btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> Memproses Akun...`;
+
+            try {
+                const response = await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'registerSiswa',
+                        nama_lengkap: document.getElementById('regNama').value,
+                        username: document.getElementById('regUsername').value,
+                        kelas: document.getElementById('regKelas').value,
+                        password: document.getElementById('regPassword').value
+                    })
+                });
+                const result = await response.json();
+
+                if (result.status === "success") {
+                    alert(result.message);
+                    bukaModalRegister(false); // Tutup modal setelah sukses
+                } else {
+                    alert(result.message);
+                }
+            } catch (error) { alert("Gagal mendaftarkan akun baru."); }
+            finally { btn.disabled = false; btn.innerHTML = `<i class="fa-solid fa-user-check mr-1"></i> Selesaikan Pendaftaran`; }
+        });
+    </script>
+</body>
+</html>
