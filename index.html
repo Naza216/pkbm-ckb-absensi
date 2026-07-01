@@ -3,114 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Masuk - Sistem Akademik PKBM</title>
+    <title>Masuk - PKBM Cahaya Kahuripan</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 min-h-screen flex items-center justify-center p-4">
+<body class="bg-gradient-to-br from-slate-50 via-blue-50/40 to-slate-100 min-h-screen antialiased font-sans flex items-center justify-center p-4 relative overflow-x-hidden">
 
-    <div class="w-full max-w-md bg-white/10 backdrop-blur-md border border-white/10 p-8 rounded-3xl shadow-2xl space-y-6">
+    <div class="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-gradient-to-tr from-sky-400/10 to-cyan-400/10 blur-3xl rounded-full pointer-events-none"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] bg-gradient-to-br from-emerald-400/10 to-teal-400/10 blur-3xl rounded-full pointer-events-none"></div>
+
+    <div class="w-full max-w-md bg-white/95 backdrop-blur-xl border border-white rounded-[2.5rem] p-8 sm:p-10 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.06)] relative z-10 transition-all duration-300 hover:shadow-[0_30px_60px_-10px_rgba(14,165,233,0.1)]">
         
-        <div class="text-center space-y-2">
-            <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-tr from-sky-500 to-emerald-500 text-white text-2xl shadow-lg">
-                <i class="fa-solid fa-shield-halved"></i>
+        <div class="flex flex-col items-center text-center space-y-4 mb-8">
+            <div class="w-16 h-16 bg-white border border-slate-150 rounded-2xl flex items-center justify-center p-2.5 shadow-md shadow-slate-100/50">
+                <img src="img-logo-pkbm.png" alt="Logo PKBM" class="w-full h-full object-contain">
             </div>
-            <h2 class="text-2xl font-black tracking-tight text-white">Sistem Gateway PKBM</h2>
-            <p class="text-xs text-slate-400 font-medium">Silakan masuk menggunakan akun resmi Anda</p>
+            <div class="space-y-1">
+                <h1 class="text-xl font-black text-slate-800 tracking-tight">
+                    PKBM Cahaya <span class="bg-clip-text text-transparent bg-gradient-to-r from-sky-500 to-blue-600">Kahuripan</span>
+                </h1>
+                <p class="text-xs text-slate-400 font-medium">Silakan masuk menggunakan akun resmi Anda</p>
+            </div>
         </div>
 
-        <form id="formLogin" class="space-y-4">
-            <div>
-                <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Username / NISN</label>
-                <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
-                        <i class="fa-solid fa-user text-xs"></i>
-                    </span>
-                    <input type="text" id="username" required class="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-sm text-white focus:ring-2 focus:ring-sky-500 focus:outline-none placeholder-slate-500 transition" placeholder="Masukkan username">
+        <form id="formLogin" class="space-y-5">
+            <div class="space-y-1.5">
+                <label for="username" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider pl-1">Username / NISN</label>
+                <div class="relative group">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-sky-500 transition-colors">
+                        <i class="fa-solid fa-user text-sm"></i>
+                    </div>
+                    <input type="text" id="username" required autocomplete="username"
+                        class="w-full pl-11 pr-4 py-3.5 bg-slate-50/80 border border-slate-200/80 rounded-2xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:bg-white focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10 focus:outline-none transition-all shadow-inner" 
+                        placeholder="Masukkan username atau NISN">
                 </div>
             </div>
 
-            <div>
-                <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Kata Sandi</label>
-                <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
-                        <i class="fa-solid fa-lock text-xs"></i>
-                    </span>
-                    <input type="password" id="password" required class="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-sm text-white focus:ring-2 focus:ring-sky-500 focus:outline-none placeholder-slate-500 transition" placeholder="••••••••">
+            <div class="space-y-1.5">
+                <label for="password" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider pl-1">KATA SANDI</label>
+                <div class="relative group">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-sky-500 transition-colors">
+                        <i class="fa-solid fa-lock text-sm"></i>
+                    </div>
+                    <input type="password" id="password" required autocomplete="current-password"
+                        class="w-full pl-11 pr-12 py-3.5 bg-slate-50/80 border border-slate-200/80 rounded-2xl text-xs font-semibold text-slate-800 placeholder-slate-400 focus:bg-white focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10 focus:outline-none transition-all shadow-inner" 
+                        placeholder="••••••••">
+                    <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer transition-colors focus:outline-none">
+                        <i id="eyeIcon" class="fa-solid fa-eye text-xs"></i>
+                    </button>
                 </div>
             </div>
 
-            <button type="submit" id="btnLogin" class="w-full mt-2 bg-gradient-to-r from-sky-500 to-emerald-500 hover:opacity-90 text-white font-bold py-3.5 rounded-xl transition shadow-lg cursor-pointer text-sm">
-                <i class="fa-solid fa-right-to-bracket mr-1.5"></i> Autentikasi Akun
+            <button type="submit" id="btnLogin" class="w-full mt-2 relative overflow-hidden group/btn bg-gradient-to-r from-sky-500 via-sky-600 to-emerald-500 text-white font-bold py-3.5 rounded-2xl transition-all duration-300 shadow-[0_4px_20px_rgba(14,165,233,0.25)] hover:shadow-[0_4px_25px_rgba(14,165,233,0.4)] hover:scale-[1.01] active:scale-[0.99] cursor-pointer text-xs tracking-wide flex items-center justify-center gap-2">
+                <span class="absolute inset-0 w-full h-full bg-white/10 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></span>
+                <i class="fa-solid fa-right-to-bracket text-[11px] transition-transform group-hover/btn:translate-x-0.5"></i> Autentikasi Akun
             </button>
         </form>
 
-        <div class="text-center pt-2">
-            <p class="text-xs text-slate-400">Warga belajar baru? 
-                <button onclick="bukaModalRegister(true)" class="text-sky-400 font-bold hover:underline bg-transparent border-none cursor-pointer focus:outline-none">Daftar Akun Di Sini</button>
+        <div class="mt-8 text-center border-t border-slate-100 pt-5">
+            <p class="text-xs text-slate-400 font-medium">
+                Warga belajar baru? <a href="#" onclick="alert('Pendaftaran online mandiri sedang ditutup. Silakan datang langsung ke sekretariat PKBM.')" class="font-bold text-sky-600 hover:text-sky-700 transition-colors underline decoration-sky-500/30 underline-offset-2">Daftar Akun Di Sini</a>
             </p>
-        </div>
-
-    </div>
-
-    <div id="modalRegister" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
-        <div class="w-full max-w-md bg-slate-900 border border-slate-800 p-6 rounded-3xl shadow-2xl space-y-4 relative">
-            
-            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                <div>
-                    <h3 class="text-lg font-black text-white"><i class="fa-solid fa-user-plus text-sky-400 mr-2"></i>Registrasi Warga Belajar</h3>
-                    <p class="text-[11px] text-slate-400 mt-0.5">Buat akun agar nama Anda terdaftar di lembar absensi kelas.</p>
-                </div>
-                <button onclick="bukaModalRegister(false)" class="text-slate-400 hover:text-white cursor-pointer p-1 text-sm"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-
-            <form id="formRegister" class="space-y-3.5">
-                <div>
-                    <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Nama Lengkap Siswa</label>
-                    <input type="text" id="regNama" required class="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white focus:ring-2 focus:ring-sky-500 focus:outline-none" placeholder="Contoh: Budi Santoso">
-                </div>
-
-                <div>
-                    <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Username / NISN (Untuk Login)</label>
-                    <input type="text" id="regUsername" required class="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white focus:ring-2 focus:ring-sky-500 focus:outline-none" placeholder="Contoh: 22230104">
-                </div>
-
-                <div>
-                    <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Pilih Kelompok Belajar / Kelas</label>
-                    <input type="text" id="regKelas" required class="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white focus:ring-2 focus:ring-sky-500 focus:outline-none" placeholder="Contoh: B Wangunharja">
-                </div>
-
-                <div>
-                    <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Kata Sandi (Password)</label>
-                    <input type="password" id="regPassword" required class="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white focus:ring-2 focus:ring-sky-500 focus:outline-none" placeholder="••••••••">
-                </div>
-
-                <button type="submit" id="btnSimpanRegister" class="w-full mt-2 bg-gradient-to-r from-sky-500 to-emerald-500 hover:opacity-90 text-white font-bold py-3 rounded-xl transition shadow-md cursor-pointer text-sm">
-                    <i class="fa-solid fa-user-check mr-1"></i> Selesaikan Pendaftaran
-                </button>
-            </form>
         </div>
     </div>
 
     <script>
-        const WEB_APP_URL = "hhttps://script.google.com/macros/s/AKfycbxLvqG4peqX-et8GGZUUCCXjMgsGJTuDBIMwDqkSkLJwytt-CFiE5WlZjRhxRTvS6OxYw/exec"; // PASTE URL WEB APP KAMU DI SINI
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw-eFOXPYKVMRguM0_Fwi43DrCmj9_fiL5UnuCfSray3hPPv_brk_sKwRWrqXYhYOEXeg/exec";
 
-        // FUNGSI KONTROL POP-UP MODAL
-        function bukaModalRegister(status) {
-            const modal = document.getElementById('modalRegister');
-            if(status) {
-                modal.classList.remove('hidden');
-            } else {
-                modal.classList.add('hidden');
-                document.getElementById('formRegister').reset();
+        // FUNCTION TOGGLE SECURITY PASSWORD VISIBILITY
+        document.addEventListener("DOMContentLoaded", function () {
+            const passwordInput = document.getElementById("password");
+            const togglePassword = document.getElementById("togglePassword");
+            const eyeIcon = document.getElementById("eyeIcon");
+
+            if (togglePassword && passwordInput && eyeIcon) {
+                togglePassword.addEventListener("click", function () {
+                    const isPassword = passwordInput.getAttribute("type") === "password";
+                    passwordInput.setAttribute("type", isPassword ? "text" : "password");
+                    
+                    if (isPassword) {
+                        eyeIcon.classList.remove("fa-eye");
+                        eyeIcon.classList.add("fa-eye-slash");
+                    } else {
+                        eyeIcon.classList.remove("fa-eye-slash");
+                        eyeIcon.classList.add("fa-eye");
+                    }
+                });
             }
-        }
+        });
 
-        // AJAK SUBMIT FORM LOGIN
+        // AJAX LIVE SUBMIT ACTION LOGIN
         document.getElementById('formLogin').addEventListener('submit', async function(e) {
             e.preventDefault();
             const btn = document.getElementById('btnLogin');
-            btn.disabled = true; btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Memeriksa...`;
+            btn.disabled = true; 
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Memeriksa...`;
 
             try {
                 const response = await fetch(WEB_APP_URL, {
@@ -131,37 +118,12 @@
                 } else {
                     alert(result.message);
                 }
-            } catch (error) { alert("Gagal terhubung dengan server database."); }
-            finally { btn.disabled = false; btn.innerHTML = `<i class="fa-solid fa-right-to-bracket mr-1.5"></i> Autentikasi Akun`; }
-        });
-
-        // AJAX SUBMIT FORM REGISTRASI SISWA BARU
-        document.getElementById('formRegister').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const btn = document.getElementById('btnSimpanRegister');
-            btn.disabled = true; btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> Memproses Akun...`;
-
-            try {
-                const response = await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        action: 'registerSiswa',
-                        nama_lengkap: document.getElementById('regNama').value,
-                        username: document.getElementById('regUsername').value,
-                        kelas: document.getElementById('regKelas').value,
-                        password: document.getElementById('regPassword').value
-                    })
-                });
-                const result = await response.json();
-
-                if (result.status === "success") {
-                    alert(result.message);
-                    bukaModalRegister(false); // Tutup modal setelah sukses
-                } else {
-                    alert(result.message);
-                }
-            } catch (error) { alert("Gagal mendaftarkan akun baru."); }
-            finally { btn.disabled = false; btn.innerHTML = `<i class="fa-solid fa-user-check mr-1"></i> Selesaikan Pendaftaran`; }
+            } catch (error) { 
+                alert("Gagal terhubung dengan server database."); 
+            } finally { 
+                btn.disabled = false; 
+                btn.innerHTML = `<i class="fa-solid fa-right-to-bracket mr-1.5"></i> Autentikasi Akun`; 
+            }
         });
     </script>
 </body>

@@ -7,138 +7,147 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-slate-50 min-h-screen text-slate-800 antialiased font-sans flex flex-col">
+<body class="bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-100 min-h-screen text-slate-800 antialiased font-sans flex flex-col">
 
-    <header class="bg-slate-900 text-white fixed top-0 inset-x-0 h-16 z-40 flex items-center justify-between px-4 shadow-md">
-        <div class="flex items-center gap-3">
-            <button onclick="toggleSidebar(true)" class="text-white hover:text-amber-400 p-2 text-xl focus:outline-none cursor-pointer">
+    <header class="bg-white/80 backdrop-blur-md border-b border-slate-200/80 fixed top-0 inset-x-0 h-16 z-40 flex items-center justify-between px-6 shadow-[0_2px_20px_-5px_rgba(0,0,0,0.05)]">
+        <div class="flex items-center gap-4">
+            <button onclick="toggleSidebar(true)" class="text-slate-500 hover:text-sky-600 p-2 text-xl focus:outline-none cursor-pointer transition-colors">
                 <i class="fa-solid fa-bars"></i>
             </button>
-            <span class="text-base font-extrabold tracking-tight flex items-center gap-2">
-                <span class="text-amber-400"><i class="fa-solid fa-chalkboard-user"></i></span> PKBM GURU
-            </span>
+                    <span class="flex items-center justify-center w-15 h-15 rounded-lg bg-white-500 text-white shadow-sm shadow-sky-500/30">
+                      <img src="img-logo-pkbm.png" alt="Logo" class="w-13 h-13 object-contain onerror='this.style.display=\"none\"'">  
+                    </span>
+                    <span>PKBM Cahaya Kahuripan Bangsa</span>
         </div>
 
-        <div class="flex items-center gap-3">
-            <span id="namaGuruTop" class="text-xs font-semibold hidden sm:inline text-slate-300">Pengajar</span>
-            <button onclick="logout()" class="text-xs bg-rose-600 hover:bg-rose-700 font-bold px-3 py-1.5 rounded-lg transition shadow-xs cursor-pointer">
-                <i class="fa-solid fa-power-off"></i> Keluar
+        <div class="flex items-center gap-4">
+            <span id="namaGuruTop" class="text-xs font-bold hidden sm:inline text-slate-600 tracking-wide border-r border-slate-200 pr-4">Pengajar</span>
+            <button onclick="logout()" class="text-xs bg-rose-50 hover:bg-rose-500 text-rose-600 hover:text-white border border-rose-200 hover:border-rose-500 font-bold px-3.5 py-2 rounded-xl transition-all shadow-xs cursor-pointer flex items-center gap-1.5 active:scale-[0.98]">
+                <i class="fa-solid fa-power-off text-[10px]"></i> Keluar
             </button>
         </div>
     </header>
 
-    <div id="sidebarOverlay" onclick="toggleSidebar(false)" class="fixed inset-0 bg-slate-950/50 backdrop-blur-xs z-50 hidden"></div>
-    <aside id="sidebarMenu" class="fixed inset-y-0 left-0 w-72 bg-white shadow-2xl z-50 flex flex-col transform -translate-x-full transition-transform duration-300 ease-in-out">
-        <div class="h-16 border-b border-slate-200 px-5 flex items-center justify-between bg-slate-50">
-            <span class="text-sm font-black text-slate-400 uppercase tracking-wider">Menu Panel</span>
-            <button onclick="toggleSidebar(false)" class="text-slate-400 hover:text-slate-600 p-1.5 text-lg cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+    <div id="sidebarOverlay" onclick="toggleSidebar(false)" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 hidden transition-all"></div>
+    <aside id="sidebarMenu" class="fixed inset-y-0 left-0 w-72 bg-white border-r border-slate-200 shadow-2xl z-50 flex flex-col transform -translate-x-full transition-transform duration-300 ease-in-out">
+        <div class="h-16 border-b border-slate-150 px-6 flex items-center justify-between bg-slate-50/50">
+            <span class="text-xs font-black text-slate-400 uppercase tracking-widest">Menu Panel</span>
+            <button onclick="toggleSidebar(false)" class="text-slate-400 hover:text-slate-600 w-8 h-8 rounded-lg hover:bg-slate-100 flex items-center justify-center transition-colors cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
         </div>
-        <nav class="flex-1 p-4 space-y-1 overflow-y-auto">
-            <button onclick="gantiHalaman('jadwal')" id="menu-jadwal" class="menu-btn w-full bg-amber-500 text-white font-bold flex items-center gap-3.5 px-4 py-3.5 rounded-xl text-sm text-left shadow-xs">
-                <i class="fa-solid fa-calendar-days text-lg w-5 text-center"></i> Jadwal Mengajar Anda
+        <nav class="flex-1 p-4 space-y-1.5 overflow-y-auto">
+            <button onclick="gantiHalaman('jadwal')" id="menu-jadwal" class="menu-btn w-full bg-gradient-to-r from-sky-500 via-sky-600 to-blue-600 text-white font-bold flex items-center gap-3.5 px-4 py-3.5 rounded-xl text-sm text-left shadow-md shadow-sky-500/15 cursor-pointer">
+                <i class="fa-solid fa-calendar-days text-base w-5 text-center"></i> Jadwal Mengajar Anda
             </button>
-            <button onclick="gantiHalaman('agenda')" id="menu-agenda" class="menu-btn w-full text-slate-600 hover:bg-slate-50 font-medium flex items-center gap-3.5 px-4 py-3.5 rounded-xl text-sm text-left">
-                <i class="fa-solid fa-book-bookmark text-lg w-5 text-center"></i> Isi Agenda Kelas
+            <button onclick="gantiHalaman('agenda')" id="menu-agenda" class="menu-btn w-full text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-transparent hover:border-slate-100 font-medium flex items-center gap-3.5 px-4 py-3.5 rounded-xl text-sm text-left cursor-pointer transition-all">
+                <i class="fa-solid fa-book-bookmark text-base w-5 text-center text-slate-400"></i> Isi Agenda Kelas
             </button>
         </nav>
     </aside>
 
-    <main class="flex-1 mt-16 p-4 max-w-xl mx-auto w-full space-y-4 pb-12">
+    <main class="flex-1 mt-16 p-4 max-w-xl mx-auto w-full space-y-6 pb-12 relative">
         
-        <section id="page-jadwal" class="halaman-panel space-y-4">
-            <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs space-y-3">
-                <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-                    <h3 class="text-sm font-black text-slate-800 uppercase tracking-wide"><i class="fa-solid fa-calendar-week text-amber-500 mr-2"></i>Plotting Jadwal Admin</h3>
-                    <button onclick="loadJadwalGuruServer()" class="text-xs text-sky-600 font-bold hover:underline cursor-pointer"><i class="fa-solid fa-rotate"></i> Sync</button>
+        <div class="absolute top-12 left-1/2 -translate-x-1/2 w-80 h-80 bg-gradient-to-tr from-sky-400/10 to-emerald-400/10 blur-3xl rounded-full pointer-events-none"></div>
+
+        <section id="page-jadwal" class="halaman-panel space-y-4 relative z-10">
+            <div class="bg-white/90 backdrop-blur-xl border border-white rounded-3xl p-6 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] space-y-4">
+                <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                    <h3 class="text-xs font-black text-slate-700 uppercase tracking-widest flex items-center gap-2">
+                        <i class="fa-solid fa-calendar-week text-sky-500 text-sm"></i> Plotting Jadwal Admin
+                    </h3>
+                    <button onclick="loadJadwalGuruServer()" class="text-xs font-bold bg-slate-50 hover:bg-slate-100 border border-slate-200 text-sky-600 px-3 py-1.5 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 shadow-xs">
+                        <i class="fa-solid fa-rotate text-[10px]"></i> Sync
+                    </button>
                 </div>
 
-                <div class="overflow-x-auto border border-slate-150 rounded-xl">
+                <div class="overflow-hidden border border-slate-150 rounded-2xl bg-white shadow-xs">
                     <table class="w-full text-left border-collapse text-xs">
                         <thead>
-                            <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold">
-                                <th class="px-3 py-3">Kelas & Mapel</th>
-                                <th class="px-3 py-3 text-center">Waktu Tugas</th>
+                            <tr class="bg-slate-50 border-b border-slate-150 text-slate-500 font-bold tracking-wide">
+                                <th class="px-4 py-3.5">Kelas & Mapel</th>
+                                <th class="px-4 py-3.5 text-center">Waktu Tugas</th>
                             </tr>
                         </thead>
                         <tbody id="tabelJadwalGuruBody" class="divide-y divide-slate-100">
-                            <tr><td colspan="2" class="px-3 py-4 text-center text-slate-400 italic">Mengambil data penugasan...</td></tr>
+                            <tr><td colspan="2" class="px-4 py-6 text-center text-slate-400 italic">Mengambil data penugasan...</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </section>
 
-        <section id="page-agenda" class="halaman-panel space-y-4 hidden">
-            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4">
+        <section id="page-agenda" class="halaman-panel space-y-4 hidden relative z-10">
+            <div class="bg-white/90 backdrop-blur-xl border border-white rounded-3xl p-6 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] space-y-5">
                 <div>
-                    <h3 class="text-base font-black text-slate-800"><i class="fa-solid fa-pen-to-square text-amber-500 mr-2"></i>Isi Berita Acara / Agenda</h3>
+                    <h3 class="text-base font-black text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-pen-to-square text-sky-500"></i> Isi Berita Acara / Agenda
+                    </h3>
                     <p class="text-xs text-slate-400 mt-0.5">Input materi pelajaran harian sebelum merilis QR-Code absensi siswa.</p>
                 </div>
 
-                <form id="formBukaAgenda" class="space-y-3.5">
-                    <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Pilih Jadwal Mengajar Aktif</label>
-                        <select id="agendaJadwalPilihan" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                <form id="formBukaAgenda" class="space-y-4">
+                    <div class="space-y-1.5">
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider pl-1">Pilih Jadwal Mengajar Aktif</label>
+                        <select id="agendaJadwalPilihan" required class="w-full bg-slate-50/80 border border-slate-200 rounded-xl px-4 py-3 text-xs font-semibold text-slate-700 focus:bg-white focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10 focus:outline-none transition-all shadow-inner">
                             <option value="">-- Pilih Jadwal Kelas Anda --</option>
                         </select>
                     </div>
 
-                    <!-- 🛠️ UPDATE: DROPDOWN TIPE SESI PERTEMUAN -->
-                    <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Tipe Sesi Pertemuan</label>
-                        <select id="agendaTipeSesi" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    <div class="space-y-1.5">
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider pl-1">Tipe Sesi Pertemuan</label>
+                        <select id="agendaTipeSesi" required class="w-full bg-slate-50/80 border border-slate-200 rounded-xl px-4 py-3 text-xs font-semibold text-slate-700 focus:bg-white focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10 focus:outline-none transition-all shadow-inner">
                             <option value="KBM">Kegiatan Belajar Mengajar (KBM) Biasa</option>
                             <option value="UTS">Ujian Tengah Semester (UTS)</option>
                             <option value="UAS">Ujian Akhir Semester (UAS)</option>
                         </select>
                     </div>
 
-                    <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Pokok Pembahasan / Materi / Judul Ujian</label>
-                        <input type="text" id="agendaMateri" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:ring-2 focus:ring-amber-500 focus:outline-none" placeholder="Contoh: Aljabar Linear Bab II / Ujian Tengah Semester">
+                    <div class="space-y-1.5">
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider pl-1">Pokok Pembahasan / Materi / Judul Ujian</label>
+                        <input type="text" id="agendaMateri" required class="w-full px-4 py-3 bg-slate-50/80 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 placeholder-slate-400 focus:bg-white focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10 focus:outline-none transition-all shadow-inner" placeholder="Contoh: Aljabar Linear Bab II / Ujian Tengah Semester">
                     </div>
 
-                    <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Catatan Tambahan KBM (Opsional)</label>
-                        <textarea id="agendaCatatan" rows="3" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:ring-2 focus:ring-amber-500 focus:outline-none" placeholder="Contoh: Kelas kondusif, 2 anak izin sakit."></textarea>
+                    <div class="space-y-1.5">
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider pl-1">Catatan Tambahan KBM (Opsional)</label>
+                        <textarea id="agendaCatatan" rows="3" class="w-full px-4 py-3 bg-slate-50/80 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 placeholder-slate-400 focus:bg-white focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10 focus:outline-none transition-all shadow-inner" placeholder="Contoh: Kelas kondusif, 2 anak izin sakit."></textarea>
                     </div>
 
-                    <button type="submit" id="btnSimpanAgenda" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl transition shadow-md cursor-pointer text-xs">
+                    <button type="submit" id="btnSimpanAgenda" class="w-full mt-2 relative overflow-hidden group/btn bg-gradient-to-r from-sky-500 via-sky-600 to-blue-600 text-white font-bold py-3.5 rounded-xl transition-all duration-300 shadow-[0_4px_15px_rgba(14,165,233,0.3)] hover:shadow-[0_4px_20px_rgba(14,165,233,0.45)] hover:scale-[1.01] active:scale-[0.99] cursor-pointer text-xs tracking-wide">
+                        <span class="absolute inset-0 w-full h-full bg-white/10 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></span>
                         <i class="fa-solid fa-qrcode mr-1.5"></i> Simpan & Generate QR-Code
                     </button>
                 </form>
 
-                <div id="boxQrTampil" class="hidden border-t border-slate-100 pt-5 text-center space-y-4 animate-in fade-in duration-300">
-                    <p class="text-xs font-bold text-emerald-600"><i class="fa-solid fa-circle-check"></i> Sesi Kelas Berhasil Dibuka!</p>
-                    <div class="inline-block p-3 bg-white border border-slate-200 rounded-2xl shadow-xs mx-auto">
-                        <div id="canvasQrArea" class="w-48 h-48 bg-slate-100 flex items-center justify-center text-[10px] text-slate-400">QR CODE IMAGE PLACEHOLDER</div>
+                <div id="boxQrTampil" class="hidden border-t border-slate-150 pt-5 text-center space-y-4">
+                    <p class="text-xs font-bold text-emerald-600 flex items-center justify-center gap-1.5"><i class="fa-solid fa-circle-check text-sm"></i> Sesi Kelas Berhasil Dibuka!</p>
+                    <div class="inline-block p-4 bg-white border border-slate-200 rounded-3xl shadow-md mx-auto transition-transform duration-500 hover:scale-[1.02]">
+                        <div id="canvasQrArea" class="w-48 h-48 bg-slate-50 flex items-center justify-center text-[10px] text-slate-400 rounded-2xl overflow-hidden">QR CODE IMAGE PLACEHOLDER</div>
                     </div>
-                    <p class="text-[10px] text-slate-400 px-6 font-medium">Siswa sekarang dapat melakukan pemindaian barcode ini langsung dari layar ponsel Anda.</p>
+                    <p class="text-[11px] text-slate-500 px-6 font-medium leading-relaxed">Siswa sekarang dapat melakukan pemindaian barcode ini langsung dari layar ponsel Anda.</p>
                     
-                    <hr class="border-slate-100 my-2">
+                    <hr class="border-slate-150 my-2">
 
                     <div class="text-left space-y-3">
                         <div class="flex justify-between items-center">
-                            <h4 class="text-xs font-black text-slate-800 uppercase tracking-wide flex items-center gap-1.5 text-sky-600">
+                            <h4 class="text-xs font-black text-sky-600 uppercase tracking-widest flex items-center gap-1.5">
                                 <i class="fa-solid fa-users-viewfinder"></i> Monitor Kehadiran Kelas
                             </h4>
-                            <button onclick="muatMonitorKehadiranSiswa()" class="text-[10px] font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 px-2.5 py-1.5 rounded-lg transition flex items-center gap-1">
+                            <button onclick="muatMonitorKehadiranSiswa()" class="text-[10px] font-bold bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 px-3 py-1.5 rounded-xl transition-all flex items-center gap-1 cursor-pointer shadow-xs">
                                 <i class="fa-solid fa-rotate text-[9px]"></i> Refresh
                             </button>
                         </div>
 
-                        <div class="overflow-x-auto border border-slate-150 rounded-xl">
+                        <div class="overflow-hidden border border-slate-200 rounded-2xl bg-white shadow-xs">
                             <table class="w-full text-left border-collapse text-[11px]">
                                 <thead>
-                                    <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold">
-                                        <th class="px-3 py-2">Nama Siswa</th>
-                                        <th class="px-3 py-2">Kelas</th>
-                                        <th class="px-3 py-2 text-center">Status</th>
+                                    <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold tracking-wide">
+                                        <th class="px-4 py-2.5">Nama Siswa</th>
+                                        <th class="px-4 py-2.5">Kelas</th>
+                                        <th class="px-4 py-2.5 text-center">Status</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tabelMonitorAbsenBody" class="divide-y divide-slate-100 text-slate-700 font-medium">
                                     <tr>
-                                        <td colspan="3" class="px-3 py-4 text-center text-slate-400 italic">Menunggu siswa memindai QR...</td>
+                                        <td colspan="3" class="px-4 py-5 text-center text-slate-400 italic">Menunggu siswa memindai QR...</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -151,7 +160,7 @@
     </main>
 
     <script>
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxLvqG4peqX-et8GGZUUCCXjMgsGJTuDBIMwDqkSkLJwytt-CFiE5WlZjRhxRTvS6OxYw/exec"; // PASTE URL WEB APP KAMU DI SINI
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw-eFOXPYKVMRguM0_Fwi43DrCmj9_fiL5UnuCfSray3hPPv_brk_sKwRWrqXYhYOEXeg/exec"; // PASTE URL WEB APP KAMU DI SINI
         let userLogin = null;
         let listJadwalGuruGlobal = [];
         let idAgendaAktifGlobal = null; 
@@ -187,10 +196,10 @@
             document.getElementById('page-' + pageId).classList.remove('hidden');
 
             document.querySelectorAll('.menu-btn').forEach(b => {
-                b.className = "menu-btn w-full text-slate-600 hover:bg-slate-50 font-medium flex items-center gap-3.5 px-4 py-3.5 rounded-xl text-sm text-left";
+                b.className = "menu-btn w-full text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-transparent hover:border-slate-100 font-medium flex items-center gap-3.5 px-4 py-3.5 rounded-xl text-sm text-left cursor-pointer transition-all";
             });
             const activeBtn = document.getElementById('menu-' + pageId);
-            if (activeBtn) activeBtn.className = "menu-btn w-full bg-amber-500 text-white font-bold flex items-center gap-3.5 px-4 py-3.5 rounded-xl text-sm text-left shadow-xs";
+            if (activeBtn) activeBtn.className = "menu-btn w-full bg-gradient-to-r from-sky-500 via-sky-600 to-blue-600 text-white font-bold flex items-center gap-3.5 px-4 py-3.5 rounded-xl text-sm text-left shadow-md shadow-sky-500/15 cursor-pointer";
         }
 
         async function loadJadwalGuruServer() {
@@ -210,30 +219,38 @@
                     selectAgenda.innerHTML = `<option value="">-- Pilih Jadwal Kelas Anda --</option>`;
                     
                     result.data.forEach(j => {
+                        // UPDATE TAMPILAN BARIS TABEL (Light Mode Bersih Kontras Tinggi)
                         tbody.innerHTML += `
-                            <tr class="hover:bg-slate-50/80">
-                                <td class="px-3 py-3 font-bold text-slate-700">${j.mata_pelajaran}<br><span class="text-[10px] text-amber-600 font-bold">${j.kelas}</span></td>
-                                <td class="px-3 py-3 text-center text-slate-500 font-medium align-middle">${j.hari}<br><span class="text-[10px] text-slate-400 font-medium">${j.jam_mengajar}</span></td>
+                            <tr class="hover:bg-slate-50/70 transition-colors">
+                                <td class="px-4 py-3.5 font-bold text-slate-800">
+                                    ${j.mata_pelajaran}
+                                    <br>
+                                    <span class="inline-block mt-1 px-2.5 py-0.5 text-[9px] font-black tracking-wide uppercase bg-sky-50 text-sky-600 border border-sky-100 rounded-md shadow-xs">${j.kelas}</span>
+                                </td>
+                                <td class="px-4 py-3.5 text-center text-slate-600 font-bold align-middle leading-relaxed">
+                                    <span class="text-slate-800 font-extrabold">${j.hari}</span>
+                                    <br>
+                                    <span class="text-[10px] text-slate-400 font-semibold">${j.jam_mengajar}</span>
+                                </td>
                             </tr>`;
                         
                         selectAgenda.innerHTML += `<option value="${j.id_jadwal}">${j.mata_pelajaran} - ${j.kelas} (${j.hari})</option>`;
                     });
                 } else {
-                    tbody.innerHTML = `<tr><td colspan="2" class="px-3 py-4 text-center text-slate-400 italic">Belum ada penugasan mengajar dari Admin.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="2" class="px-4 py-6 text-center text-slate-400 italic">Belum ada penugasan mengajar dari Admin.</td></tr>`;
                 }
             } catch (e) {
-                tbody.innerHTML = `<tr><td colspan="2" class="px-3 py-4 text-center text-rose-500 font-semibold">Gagal Sinkronisasi Jadwal.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="2" class="px-4 py-6 text-center text-rose-500 font-semibold">Gagal Sinkronisasi Jadwal.</td></tr>`;
             }
         }
 
-        // 🛠️ UPDATE: SUBMIT FORM DISINKRONKAN DENGAN FORMAT BACKEND TERBARU
         document.getElementById('formBukaAgenda').addEventListener('submit', async function(e) {
             e.preventDefault();
             const btn = document.getElementById('btnSimpanAgenda');
             const idJadwalTerpilih = document.getElementById('agendaJadwalPilihan').value;
             const materiInput = document.getElementById('agendaMateri').value;
             const catatanInput = document.getElementById('agendaCatatan').value;
-            const tipeSesiInput = document.getElementById('agendaTipeSesi').value; // Ambil nilai KBM/UTS/UAS
+            const tipeSesiInput = document.getElementById('agendaTipeSesi').value;
 
             btn.disabled = true;
             btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Memproses Sesi...`;
@@ -249,10 +266,10 @@
                         id_guru: userLogin.id_user,
                         nama_guru: userLogin.nama_lengkap,
                         mata_pelajaran: detailJadwal.mata_pelajaran,
-                        kelas: detailJadwal.kelas, // Mengirim data Teks Kelas murni agar validasi silang siswa sukses
+                        kelas: detailJadwal.kelas, 
                         materi: materiInput,
                         catatan: catatanInput,
-                        tipe_sesi: tipeSesiInput // Parameter baru yang ditangkap oleh kolom J di sheet Agenda
+                        tipe_sesi: tipeSesiInput 
                     })
                 });
                 const result = await res.json();
@@ -286,8 +303,8 @@
 
             monitorBody.innerHTML = `
                 <tr>
-                    <td colspan="3" class="px-3 py-4 text-center text-slate-400 italic animate-pulse">
-                        <i class="fa-solid fa-spinner animate-spin mr-1"></i> Menyinkronkan daftar hadir...
+                    <td colspan="3" class="px-4 py-6 text-center text-slate-400 italic">
+                        <i class="fa-solid fa-spinner animate-spin mr-1.5 text-sky-500"></i> Menyinkronkan daftar hadir...
                     </td>
                 </tr>`;
 
@@ -304,22 +321,23 @@
                 if (result.status === "success" && result.data.length > 0) {
                     monitorBody.innerHTML = "";
                     result.data.forEach(s => {
+                        // UPDATE TAMPILAN BADGE SISWA (Light Mode Kontras Tinggi)
                         const badgeStatus = s.status === "HADIR" 
-                            ? `<span class="px-2 py-0.5 font-black bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-md text-[9px]"><i class="fa-solid fa-check"></i> HADIR</span>`
-                            : `<span class="px-2 py-0.5 font-black bg-slate-100 text-slate-400 border border-slate-200 rounded-md text-[9px]">BELUM ABSEN</span>`;
+                            ? `<span class="px-2.5 py-0.5 font-black bg-emerald-50 text-emerald-600 border border-emerald-200 rounded-md text-[9px] tracking-wide"><i class="fa-solid fa-check text-[8px]"></i> HADIR</span>`
+                            : `<span class="px-2.5 py-0.5 font-black bg-slate-50 text-slate-400 border border-slate-200 rounded-md text-[9px] tracking-wide">BELUM ABSEN</span>`;
 
                         monitorBody.innerHTML += `
-                            <tr class="hover:bg-slate-50/80 transition">
-                                <td class="px-3 py-2.5 font-bold text-slate-800">${s.nama_lengkap}</td>
-                                <td class="px-3 py-2.5 text-slate-500 font-mono">${s.kelas.toUpperCase()}</td>
-                                <td class="px-3 py-2.5 text-center">${badgeStatus}</td>
+                            <tr class="hover:bg-slate-50/50 transition-colors">
+                                <td class="px-4 py-3 font-bold text-slate-800">${s.nama_lengkap}</td>
+                                <td class="px-4 py-3 text-slate-500 font-mono text-[10px] uppercase font-bold">${s.kelas}</td>
+                                <td class="px-4 py-3 text-center align-middle">${badgeStatus}</td>
                             </tr>`;
                     });
                 } else {
-                    monitorBody.innerHTML = `<tr><td colspan="3" class="px-3 py-4 text-center text-slate-400 italic">Belum ada siswa yang terdaftar di kelas ini atau data kosong.</td></tr>`;
+                    monitorBody.innerHTML = `<tr><td colspan="3" class="px-4 py-6 text-center text-slate-400 italic">Belum ada siswa yang terdaftar di kelas ini atau data kosong.</td></tr>`;
                 }
             } catch(e) {
-                monitorBody.innerHTML = `<tr><td colspan="3" class="px-3 py-4 text-center text-rose-500 font-semibold">Gagal memuat monitor absensi.</td></tr>`;
+                monitorBody.innerHTML = `<tr><td colspan="3" class="px-4 py-6 text-center text-rose-500 font-semibold">Gagal memuat monitor absensi.</td></tr>`;
             }
         }
 

@@ -8,91 +8,237 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 </head>
-<body class="bg-slate-50 min-h-screen text-slate-800 flex flex-col md:flex-row">
+<body class="bg-gradient-to-br from-slate-50 via-blue-50/20 to-slate-100 min-h-screen text-slate-800 antialiased font-sans flex flex-col md:flex-row">
 
-    <aside class="w-full md:w-64 bg-slate-900 text-slate-200 flex flex-col md:fixed md:inset-y-0 md:left-0 z-50 shadow-xl">
-        <div class="p-5 border-b border-slate-800 bg-slate-950 flex justify-between items-center md:block">
-            <div>
-                <h1 class="text-lg font-black tracking-wider text-sky-400 flex items-center gap-2">
-                    <i class="fa-solid fa-graduation-cap"></i> PKBM SISWA
-                </h1>
-                <p id="kelasBadge" class="text-xs text-slate-400 font-medium mt-0.5">Kelas: Loading...</p>
+    <div class="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-sky-400/10 to-teal-400/5 blur-3xl rounded-full pointer-events-none z-0"></div>
+    <div class="absolute bottom-10 left-64 w-80 h-80 bg-gradient-to-tr from-emerald-400/10 to-cyan-400/5 blur-3xl rounded-full pointer-events-none z-0"></div>
+
+    <aside class="w-full md:w-64 bg-white/90 backdrop-blur-md border-b md:border-b-0 md:border-r border-slate-200/80 flex flex-col md:fixed md:inset-y-0 md:left-0 z-50 shadow-[2px_0_20px_-5px_rgba(0,0,0,0.03)]">
+        <div class="p-5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center md:block">
+            <div class="flex flex-col gap-1">
+                <div class="flex items-center gap-2">
+                    <div class="w-7 h-7 bg-white border border-slate-200 rounded-lg flex items-center justify-center p-1 shadow-2xs">
+                        <img src="img-logo-pkbm.png" alt="" class="w-full h-full object-contain" onerror="this.style.display='none'">
+                    </div>
+                    <h1 class="text-sm font-black tracking-tight text-slate-800">PKBM SISWA</h1>
+                </div>
+                <div class="mt-1">
+                    <span id="kelasBadge" class="text-[10px] bg-sky-50 text-sky-700 border border-sky-100 px-2 py-0.5 rounded-md font-bold shadow-2xs inline-block">Kelas: Loading...</span>
+                </div>
             </div>
-            <button onclick="logout()" class="md:hidden bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition">
+            <button onclick="logout()" class="md:hidden bg-rose-50 hover:bg-rose-500 text-rose-600 hover:text-white border border-rose-200 hover:border-rose-500 p-2.5 rounded-xl text-xs font-bold transition-all active:scale-95 flex items-center justify-center cursor-pointer">
                 <i class="fa-solid fa-power-off"></i>
             </button>
         </div>
         
-        <nav class="flex-1 p-4 space-y-1.5">
-            <button onclick="gantiMenu('Beranda', this)" class="menu-btn w-full bg-sky-600 text-white font-bold flex items-center gap-3 px-4 py-3 rounded-xl transition text-sm cursor-pointer text-left">
-                <i class="fa-solid fa-house w-5 text-center"></i> Beranda & Info Kelas
+        <nav class="flex-1 p-3 space-y-1 overflow-y-auto">
+            <button onclick="gantiMenu('Beranda', this)" class="menu-btn w-full bg-gradient-to-r from-sky-500 via-sky-600 to-blue-600 text-white font-bold flex items-center gap-3 px-3.5 py-3 rounded-xl shadow-md shadow-sky-500/15 transition-all text-xs cursor-pointer text-left">
+                <i class="fa-solid fa-house text-sm w-4 text-center"></i> Beranda & Info Kelas
             </button>
-            <button onclick="gantiMenu('ScanQR', this)" class="menu-btn w-full text-slate-400 hover:bg-slate-800 hover:text-slate-200 font-medium flex items-center gap-3 px-4 py-3 rounded-xl transition text-sm cursor-pointer text-left">
-                <i class="fa-solid fa-qrcode w-5 text-center"></i> Scan Presensi QR
+            <button onclick="gantiMenu('Ujian', this)" class="menu-btn w-full text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-transparent hover:border-slate-100 font-medium flex items-center gap-3 px-3.5 py-3 rounded-xl transition-all text-xs cursor-pointer text-left">
+                <i class="fa-solid fa-bell text-sm w-4 text-center text-rose-500"></i> Jadwal Evaluasi & Ujian
+            </button>
+            <button onclick="gantiMenu('Modul', this)" class="menu-btn w-full text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-transparent hover:border-slate-100 font-medium flex items-center gap-3 px-3.5 py-3 rounded-xl transition-all text-xs cursor-pointer text-left">
+                <i class="fa-solid fa-book-open text-sm w-4 text-center text-emerald-500"></i> Modul & Pembahasan
+            </button>
+            <button onclick="gantiMenu('Riwayat', this)" class="menu-btn w-full text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-transparent hover:border-slate-100 font-medium flex items-center gap-3 px-3.5 py-3 rounded-xl transition-all text-xs cursor-pointer text-left">
+                <i class="fa-solid fa-clock-rotate-left text-sm w-4 text-center text-amber-500"></i> Riwayat Presensi
+            </button>
+            
+            <button onclick="gantiMenu('Keringanan', this)" class="menu-btn w-full text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-transparent hover:border-slate-100 font-medium flex items-center gap-3 px-3.5 py-3 rounded-xl transition-all text-xs cursor-pointer text-left">
+                <i class="fa-solid fa-file-medical text-sm w-4 text-center text-indigo-500"></i> Pengajuan Keringanan
+            </button>
+            
+            <div class="h-px bg-slate-100 my-2"></div>
+            <button onclick="gantiMenu('Profil', this)" class="menu-btn w-full text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-transparent hover:border-slate-100 font-medium flex items-center gap-3 px-3.5 py-3 rounded-xl transition-all text-xs cursor-pointer text-left">
+                <i class="fa-solid fa-circle-user text-sm w-4 text-center text-indigo-500"></i> Profil Saya
+            </button>
+            <button onclick="gantiMenu('ScanQR', this)" class="menu-btn w-full text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-transparent hover:border-slate-100 font-medium flex items-center gap-3 px-3.5 py-3 rounded-xl transition-all text-xs cursor-pointer text-left">
+                <i class="fa-solid fa-qrcode text-sm w-4 text-center text-sky-500"></i> Scan Presensi QR
             </button>
         </nav>
 
-        <div class="hidden md:flex p-4 border-t border-slate-800 bg-slate-950 justify-between items-center">
-            <span id="namaSiswa" class="text-xs font-semibold text-slate-300 truncate max-w-[120px]">Siswa...</span>
-            <button onclick="logout()" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer">
-                <i class="fa-solid fa-power-off"></i> Keluar
+        <div class="hidden md:flex p-4 border-t border-slate-150 bg-slate-50/50 justify-between items-center gap-2">
+            <div class="flex items-center gap-2 truncate max-w-[140px]">
+                <div class="w-7 h-7 rounded-full bg-gradient-to-br from-sky-400 to-blue-500 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-2xs">
+                    <i class="fa-solid fa-user-graduate text-[10px]"></i>
+                </div>
+                <span id="namaSiswa" class="text-xs font-bold text-slate-700 truncate">Siswa...</span>
+            </div>
+            <button onclick="logout()" class="bg-rose-50 hover:bg-rose-500 text-rose-600 hover:text-white border border-rose-200 hover:border-rose-500 px-2.5 py-1.5 rounded-lg text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 active:scale-95 shadow-2xs">
+                <i class="fa-solid fa-power-off text-[9px]"></i> Keluar
             </button>
         </div>
     </aside>
 
-    <main class="flex-1 md:pl-64 min-h-screen flex flex-col">
+    <main class="flex-1 md:pl-64 min-h-screen flex flex-col relative z-10">
         
-        <header class="bg-white border-b border-slate-200 px-6 py-5 flex justify-between items-center shadow-xs">
+        <header class="bg-white/80 backdrop-blur-md border-b border-slate-200/80 px-6 py-4 flex justify-between items-center shadow-[0_2px_20px_-5px_rgba(0,0,0,0.03)]">
             <div>
-                <h2 id="judulHalaman" class="text-xl font-black text-slate-800">Beranda Belajar</h2>
-                <p class="text-xs text-slate-500 mt-0.5">Pantau jadwal pelajaran harian, agenda kelas, dan pengumuman ujian resmi.</p>
+                <h2 id="judulHalaman" class="text-base font-black text-slate-800 tracking-tight">Beranda Belajar</h2>
+                <p id="deskripsiHalaman" class="text-[11px] text-slate-400 mt-0.5 font-medium">Selamat datang kembali! Periksa informasi akademik terupdate kamu di sini.</p>
             </div>
         </header>
 
-        <div class="p-6 flex-1 space-y-6">
+        <div class="p-4 sm:p-6 flex-1 max-w-4xl w-full mx-auto">
 
-            <div id="panel-Beranda" class="menu-panel space-y-6">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    
-                    <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4">
-                        <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2 text-rose-600">
-                            <i class="fa-solid fa-bell"></i> Jadwal Evaluasi / Ujian Resmi
-                        </h3>
-                        <div id="listUjianSiswa" class="space-y-3 divide-y divide-slate-100 max-h-60 overflow-y-auto pr-1">
-                        </div>
+            <div id="panel-Beranda" class="menu-panel space-y-5">
+                <div class="bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 rounded-2xl p-6 text-white shadow-md shadow-sky-500/10 relative overflow-hidden">
+                    <div class="absolute right-[-5%] top-[-20%] w-40 h-40 bg-white/10 blur-2xl rounded-full"></div>
+                    <div class="relative z-10 space-y-2">
+                        <span class="bg-white/20 text-white font-bold text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full backdrop-blur-xs">Sistem Akademik Mandiri</span>
+                        <h3 class="text-lg font-black tracking-tight">Semangat Belajar, Warga Belajar Hebat!</h3>
+                        <p class="text-xs text-sky-100/90 max-w-xl font-medium leading-relaxed">Gunakan bilah menu navigasi di samping untuk memeriksa jadwal ujian, rangkuman materi dari tutor, serta melakukan absensi digital kelas secara mandiri.</p>
                     </div>
-
-                    <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4">
-                        <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2 text-emerald-600">
-                            <i class="fa-solid fa-book-open"></i> Modul & Pembahasan Materi Guru
-                        </h3>
-                        <div id="listAgendaSiswa" class="space-y-3 divide-y divide-slate-100 max-h-60 overflow-y-auto pr-1">
-                        </div>
-                    </div>
-
                 </div>
 
-                <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4">
-                    <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2 text-sky-600">
-                        <i class="fa-solid fa-clock-rotate-left"></i> Riwayat Presensi Kehadiran Kamu
-                    </h3>
-                    <div id="listRiwayatAbsen" class="space-y-3 divide-y divide-slate-100 max-h-60 overflow-y-auto pr-1">
+                <div class="bg-white/90 backdrop-blur-xl rounded-2xl border border-white p-5 shadow-xs grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="p-3 bg-slate-50 border border-slate-100 rounded-xl flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center text-sm"><i class="fa-solid fa-graduation-cap"></i></div>
+                        <div><p class="text-[10px] font-bold text-slate-400 uppercase">Status Siswa</p><p class="text-xs font-bold text-slate-700">Aktif Terdaftar</p></div>
+                    </div>
+                    <div class="p-3 bg-slate-50 border border-slate-100 rounded-xl flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm"><i class="fa-solid fa-id-card"></i></div>
+                        <div><p class="text-[10px] font-bold text-slate-400 uppercase">Platform Kehadiran</p><p class="text-xs font-bold text-slate-700">QR Code Scanner</p></div>
+                    </div>
+                    <div class="p-3 bg-slate-50 border border-slate-100 rounded-xl flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center text-sm"><i class="fa-solid fa-shield-halved"></i></div>
+                        <div><p class="text-[10px] font-bold text-slate-400 uppercase">Enkripsi Akses</p><p class="text-xs font-bold text-slate-700">Akun Resmi SSL</p></div>
                     </div>
                 </div>
             </div>
 
-            <div id="panel-ScanQR" class="menu-panel hidden max-w-md mx-auto space-y-6">
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-center space-y-4">
-                    <div>
-                        <h3 class="font-black text-slate-800 text-lg">Presensi Berbasis QR Code</h3>
-                        <p class="text-xs text-slate-500 mt-0.5">Arahkan kamera ponsel kamu ke QR Code yang ditampilkan oleh Guru di depan kelas.</p>
+            <div id="panel-Keringanan" class="menu-panel hidden space-y-4">
+                <div class="bg-white/90 backdrop-blur-xl rounded-2xl border border-white p-6 shadow-xs space-y-5">
+                    <div class="border-b border-slate-100 pb-3">
+                        <h3 class="font-black text-slate-700 text-xs uppercase tracking-widest flex items-center gap-2">
+                            <i class="fa-solid fa-file-signature text-indigo-500"></i> Kirim Berkas Keringanan Kehadiran
+                        </h3>
                     </div>
-                    
-                    <div class="overflow-hidden rounded-xl bg-slate-950 border-4 border-slate-800 relative shadow-inner aspect-square w-full">
-                        <div id="reader" class="w-full h-full"></div>
+                    <form id="formKeringanan" class="space-y-4">
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-1">Alasan Detail Tidak Hadir</label>
+                            <textarea id="alasanSiswa" required placeholder="Contoh: Mengalami kecelakaan / Rawat inap rumah sakit / Shift kendala kerja..." class="w-full p-3 bg-slate-50 border border-slate-150 rounded-xl text-xs focus:outline-none focus:border-sky-500 min-h-[100px] font-medium transition-all"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-1">Unggah Bukti Foto / Surat Dokter</label>
+                            <input type="file" id="buktiFotoSiswa" required accept="image/*" class="w-full p-2.5 bg-slate-50 border border-slate-150 rounded-xl text-xs focus:outline-none focus:border-sky-500 font-medium transition-all file:mr-4 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer">
+                            <p class="text-[10px] text-slate-400 mt-1 italic leading-relaxed">Pilih langsung berkas gambar bukti dari perangkat Anda (Format: JPG, JPEG, PNG, maksimal berkas 5MB).</p>
+                        </div>
+                        <div class="pt-2">
+                            <button type="submit" id="btnKirimKeringanan" class="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-650 hover:to-blue-750 text-white font-bold rounded-xl text-xs transition-all shadow-md shadow-indigo-500/15 flex items-center justify-center gap-2 cursor-pointer">
+                                <i class="fa-solid fa-paper-plane"></i> Kirim Form Pengajuan
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="panel-Profil" class="menu-panel hidden space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="md:col-span-1 space-y-6">
+                        <div class="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-xs flex flex-col items-center text-center space-y-4 bg-white/90 backdrop-blur-md">
+                            <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-sky-500 to-indigo-600 p-1 shadow-md shadow-sky-200">
+                                <div class="w-full h-full rounded-full bg-white flex items-center justify-center text-3xl font-black text-sky-600">
+                                    <i class="fa-solid fa-user-graduate"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 id="namaProfilKiri" class="font-black text-slate-800 text-sm tracking-tight">Nama Siswa</h3>
+                                <p class="text-[10px] font-black text-slate-400 tracking-widest mt-1">Warga Belajar</p>
+                            </div>
+                            <div class="w-full pt-4 border-t border-slate-100">
+                                <span class="px-3 py-1 bg-emerald-50 text-emerald-700 border border-emerald-100 rounded-full text-[9px] font-black uppercase"><i class="fa-solid fa-circle-check mr-1 text-[10px]"></i> Akun Terverifikasi</span>
+                            </div>
+                        </div>
                     </div>
 
-                    <div id="scanStatus" class="p-3 bg-slate-100 text-slate-600 rounded-xl text-xs font-bold font-mono">
+                    <div class="md:col-span-2 space-y-6">
+                        <div class="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-xs space-y-6 bg-white/90 backdrop-blur-md">
+                            <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-3 flex items-center gap-2">
+                                <i class="fa-solid fa-address-card text-sky-500 text-xs"></i> Informasi Data Akun Resmi
+                            </h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                <div class="space-y-0.5">
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase">Nama Lengkap</p>
+                                    <p id="detNama" class="text-xs font-black text-slate-700">-</p>
+                                </div>
+                                <div class="space-y-0.5">
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase">NISN / Username</p>
+                                    <p id="detUsername" class="text-xs font-mono font-bold text-slate-600 bg-slate-50 border border-slate-100 px-2 py-0.5 rounded-md inline-block shadow-2xs">-</p>
+                                </div>
+                                <div class="space-y-0.5">
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase">Kelas</p>
+                                    <p id="detKelas" class="text-xs font-black text-slate-700">-</p>
+                                </div>
+                                <div class="space-y-0.5">
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase">Hak Akses Sistem</p>
+                                    <p class="text-xs font-bold text-slate-700 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>Siswa Aktif</p>
+                                </div>
+                            </div>
+
+                            <div class="pt-5 border-t border-slate-100 space-y-3">
+                                <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                                    <i class="fa-solid fa-shield-halved text-indigo-500 text-xs"></i> Keamanan Sandi Akses
+                                </h3>
+                                <div class="flex flex-col sm:flex-row gap-3">
+                                    <button onclick="alert('Untuk melakukan perubahan atau reset kata sandi, silakan laporkan ke admin PKBM melalui pusat layanan bantuan.')" class="px-4 py-2.5 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-xl text-[11px] font-bold transition-all flex items-center gap-2 cursor-pointer shadow-2xs active:scale-98">
+                                        <i class="fa-solid fa-key text-slate-400 text-xs"></i> Ganti Password Akun
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="panel-Ujian" class="menu-panel hidden space-y-4">
+                <div class="bg-white/90 backdrop-blur-xl rounded-2xl border border-white p-5 shadow-xs space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <h3 class="font-black text-slate-700 text-xs uppercase tracking-widest flex items-center gap-2">
+                            <i class="fa-solid fa-calendar-check text-rose-500"></i> Pelaksanaan Evaluasi Semester
+                        </h3>
+                    </div>
+                    <div id="listUjianSiswa" class="space-y-3 max-h-[450px] overflow-y-auto pr-1"></div>
+                </div>
+            </div>
+
+            <div id="panel-Modul" class="menu-panel hidden space-y-4">
+                <div class="bg-white/90 backdrop-blur-xl rounded-2xl border border-white p-5 shadow-xs space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <h3 class="font-black text-slate-700 text-xs uppercase tracking-widest flex items-center gap-2">
+                            <i class="fa-solid fa-book-bookmark text-emerald-500"></i> Catatan Pembelajaran Tutor
+                        </h3>
+                    </div>
+                    <div id="listAgendaSiswa" class="space-y-3 max-h-[450px] overflow-y-auto pr-1"></div>
+                </div>
+            </div>
+
+            <div id="panel-Riwayat" class="menu-panel hidden space-y-4">
+                <div class="bg-white/90 backdrop-blur-xl rounded-2xl border border-white p-5 shadow-xs space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <h3 class="font-black text-slate-700 text-xs uppercase tracking-widest flex items-center gap-2">
+                            <i class="fa-solid fa-clipboard-user text-amber-500"></i> Log Riwayat Kehadiran Digital
+                        </h3>
+                    </div>
+                    <div id="listRiwayatAbsen" class="space-y-3 max-h-[450px] overflow-y-auto pr-1"></div>
+                </div>
+            </div>
+
+            <div id="panel-ScanQR" class="menu-panel hidden max-w-md mx-auto space-y-4">
+                <div class="bg-white/90 backdrop-blur-xl p-6 rounded-2xl border border-white shadow-sm text-center space-y-5">
+                    <div>
+                        <h3 class="font-black text-slate-800 text-sm flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-camera text-sky-500"></i> Validasi Presensi Kamera
+                        </h3>
+                        <p class="text-[11px] text-slate-400 mt-1 font-medium leading-relaxed px-2">Arahkan kamera ke barcode dinamis milik guru di depan kelas.</p>
+                    </div>
+                    
+                    <div class="overflow-hidden rounded-xl bg-slate-900 border border-slate-200 relative aspect-square w-full max-w-[280px] mx-auto shadow-inner">
+                        <div id="reader" class="w-full h-full object-cover"></div>
+                    </div>
+
+                    <div id="scanStatus" class="p-3 bg-slate-50 text-slate-600 border border-slate-200 rounded-xl text-[11px] font-bold font-mono shadow-inner tracking-wide">
                         Menunggu Kamera Diaktifkan...
                     </div>
                 </div>
@@ -102,7 +248,7 @@
     </main>
 
     <script>
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxLvqG4peqX-et8GGZUUCCXjMgsGJTuDBIMwDqkSkLJwytt-CFiE5WlZjRhxRTvS6OxYw/exec"; 
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw-eFOXPYKVMRguM0_Fwi43DrCmj9_fiL5UnuCfSray3hPPv_brk_sKwRWrqXYhYOEXeg/exec"; 
         let userLogin = null;
         let html5QrcodeInstance = null; 
 
@@ -119,6 +265,13 @@
             document.getElementById('namaSiswa').innerText = userLogin.nama_lengkap;
             document.getElementById('kelasBadge').innerText = "Kelas: " + userLogin.kelas;
             
+            if (document.getElementById('namaProfilKiri')) document.getElementById('namaProfilKiri').innerText = userLogin.nama_lengkap;
+            if (document.getElementById('detNama')) document.getElementById('detNama').innerText = userLogin.nama_lengkap;
+            if (document.getElementById('detUsername')) {
+                document.getElementById('detUsername').innerText = userLogin.username || userLogin.USERNAME || userLogin.NISN || "-";
+            }
+            if (document.getElementById('detKelas')) document.getElementById('detKelas').innerText = userLogin.kelas;    
+
             muatDataDashboardSiswa();
         };
 
@@ -128,30 +281,129 @@
             document.querySelectorAll('.menu-panel').forEach(p => p.classList.add('hidden'));
             document.getElementById('panel-' + targetPanel).classList.remove('hidden');
             
+            const judul = document.getElementById('judulHalaman');
+            const deskripsi = document.getElementById('deskripsiHalaman');
+
             if (targetPanel === 'Beranda') {
-                document.getElementById('judulHalaman').innerText = "Beranda Belajar";
+                judul.innerText = "Beranda Belajar";
+                deskripsi.innerText = "Selamat datang kembali! Periksa informasi akademik terupdate kamu di sini.";
                 muatDataDashboardSiswa();
+            } else if (targetPanel === 'Profil') {
+                judul.innerText = "Profil Akun Saya";
+                deskripsi.innerText = "Kelola informasi data diri dan pengaturan keamanan akun warga belajar kamu.";
+            } else if (targetPanel === 'Ujian') {
+                judul.innerText = "Jadwal Evaluasi / Ujian";
+                deskripsi.innerText = "Lihat rincian agenda pelaksanaan tes, ujian harian, serta asesmen nasional.";
+                muatDataDashboardSiswa();
+            } else if (targetPanel === 'Modul') {
+                judul.innerText = "Materi Pembelajaran";
+                deskripsi.innerText = "Akses rangkuman pembahasan materi dan tugas mandiri yang diberikan guru.";
+                muatDataDashboardSiswa();
+            } else if (targetPanel === 'Riwayat') {
+                judul.innerText = "Riwayat Kehadiran";
+                deskripsi.innerText = "Periksa log rekaman absensi sukses kehadiran yang telah diinput sebelumnya.";
+                muatDataDashboardSiswa();
+            } else if (targetPanel === 'Keringanan') {
+                judul.innerText = "Pengajuan Keringanan Absensi";
+                deskripsi.innerText = "Kirim dokumen dispensasi/keringanan kehadiran apabila absensi kelas kurang dari 80%.";
             } else if (targetPanel === 'ScanQR') {
-                document.getElementById('judulHalaman').innerText = "Pindai Absensi Kehadiran";
+                judul.innerText = "Pindai Absensi Kehadiran";
+                deskripsi.innerText = "Lakukan check-in kehadiran di kelas menggunakan sensor pemindai QR Code.";
                 mulaiScanner();
             }
 
             document.querySelectorAll('.menu-btn').forEach(b => {
-                b.classList.remove('bg-sky-600', 'text-white', 'font-bold');
-                b.classList.add('text-slate-400', 'hover:bg-slate-800', 'hover:text-slate-200', 'font-medium');
+                b.className = "menu-btn w-full text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-transparent hover:border-slate-100 font-medium flex items-center gap-3 px-3.5 py-3 rounded-xl transition-all text-xs cursor-pointer text-left";
             });
-            elemenTombol.classList.add('bg-sky-600', 'text-white', 'font-bold');
-            elemenTombol.classList.remove('text-slate-400', 'hover:bg-slate-800', 'hover:text-slate-200', 'font-medium');
+            elemenTombol.className = "menu-btn w-full bg-gradient-to-r from-sky-500 via-sky-600 to-blue-600 text-white font-bold flex items-center gap-3 px-3.5 py-3 rounded-xl shadow-md shadow-sky-500/15 transition-all text-xs cursor-pointer text-left";
         }
+
+        // PERBAIKAN LOGIKA TRANSMISI FORM PENGAJUAN KERINGANAN (SINKRONISASI DATABASE)
+        // PERBAIKAN LOGIKA TRANSMISI FORM PENGAJUAN KERINGANAN (SINKRONISASI DATABASE)
+        document.getElementById('formKeringanan').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnKirimKeringanan') || document.querySelector("button[type='submit']");
+            const fileInput = document.getElementById('buktiFotoSiswa');
+            
+            // Validasi keberadaan file gambar bukti
+            if (!fileInput || fileInput.files.length === 0) {
+                alert("Silakan pilih file gambar bukti terlebih dahulu!");
+                return;
+            }
+
+            const file = fileInput.files[0];
+            
+            // Validasi ukuran kapasitas berkas gambar (Maksimal Batas 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                alert("Ukuran file terlalu besar! Maksimal batas berkas adalah 5MB.");
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin mr-1.5"></i> Memproses Berkas...`;
+
+            // Membaca data fisik file lokal untuk ditransfer ke format String Base64
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            
+            reader.onload = async function() {
+                const base64String = reader.result;
+
+                btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin mr-1.5"></i> Mengunggah ke Server...`;
+
+                // Sinkronisasi data sesi ID Pengguna (id_user) agar pas dengan kolom target di Sheet database (id_siswa)
+                const fixedIdSiswa = userLogin.id_user || userLogin.id_siswa || "-";
+
+                try {
+                    const response = await fetch(WEB_APP_URL, {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            action: 'ajukanKeringanan',
+                            id_siswa: fixedIdSiswa,
+                            alasan: document.getElementById('alasanSiswa').value,
+                            bukti_foto: base64String,   
+                            nama_file: file.name,
+                            id_agenda: "-" 
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    alert(result.message);
+                    
+                    if (result.status === "success") {
+                        document.getElementById('formKeringanan').reset();
+                        // Alihkan menu kembali ke Beranda utama setelah pengisian berkas sukses
+                        const tombolBeranda = document.querySelector('.menu-btn');
+                        if (tombolBeranda) {
+                            gantiMenu('Beranda', tombolBeranda);
+                        } else {
+                            window.location.reload();
+                        }
+                    }
+                } catch (error) {
+                    console.error(error);
+                    alert("Gagal mengirim berkas pengajuan keringanan. Periksa jaringan Anda.");
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Kirim Form Pengajuan`;
+                }
+            };
+
+            reader.onerror = function() {
+                alert("Gagal membaca file gambar pada perangkat Anda.");
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Kirim Form Pengajuan`;
+            };
+        });
 
         async function muatDataDashboardSiswa() {
             const containerUjian = document.getElementById('listUjianSiswa');
             const containerAgenda = document.getElementById('listAgendaSiswa');
             const containerRiwayat = document.getElementById('listRiwayatAbsen');
             
-            containerUjian.innerHTML = `<p class="text-xs text-slate-400 italic py-4 animate-pulse">Menyelaraskan info ujian...</p>`;
-            containerAgenda.innerHTML = `<p class="text-xs text-slate-400 italic py-4 animate-pulse">Memuat catatan modul...</p>`;
-            containerRiwayat.innerHTML = `<p class="text-xs text-slate-400 italic py-4 animate-pulse">Mengambil riwayat presensi...</p>`;
+            if(containerUjian) containerUjian.innerHTML = `<div class="text-center py-6 text-xs text-slate-400 font-medium italic"><i class="fa-solid fa-spinner animate-spin mr-1.5 text-rose-400"></i> Menyelaraskan info ujian...</div>`;
+            if(containerAgenda) containerAgenda.innerHTML = `<div class="text-center py-6 text-xs text-slate-400 font-medium italic"><i class="fa-solid fa-spinner animate-spin mr-1.5 text-emerald-400"></i> Memuat catatan modul...</div>`;
+            if(containerRiwayat) containerRiwayat.innerHTML = `<div class="text-center py-6 text-xs text-slate-400 font-medium italic"><i class="fa-solid fa-spinner animate-spin mr-1.5 text-sky-400"></i> Mengambil riwayat presensi...</div>`;
             
             try {
                 const response = await fetch(WEB_APP_URL, {
@@ -159,80 +411,91 @@
                     body: JSON.stringify({ 
                         action: 'getSiswaDashboard', 
                         kelas: userLogin.kelas,
-                        id_siswa: userLogin.id_user 
+                        id_siswa: userLogin.id_siswa || userLogin.id_user || "-" 
                     })
                 });
                 const result = await response.json();
                 
                 if (result.status === "success") {
-                    // Render Jadwal Ujian
-                    if (!result.ujian || result.ujian.length === 0) {
-                        containerUjian.innerHTML = `<p class="text-xs text-slate-400 italic py-3">Tidak ada jadwal ujian aktif untuk kelasmu saat ini.</p>`;
-                    } else {
-                        containerUjian.innerHTML = "";
-                        result.ujian.forEach(u => {
-                            containerUjian.innerHTML += `
-                                <div class="pt-3 first:pt-0 flex justify-between items-start">
-                                    <div>
-                                        <h4 class="font-bold text-sm text-slate-800">${u.mata_pelajaran}</h4>
-                                        <p class="text-xs text-slate-500 font-medium">Pelaksanaan: ${u.tanggal} (${u.jam})</p>
-                                    </div>
-                                    <span class="px-2 py-0.5 text-[10px] font-black bg-rose-100 text-rose-700 border border-rose-200 rounded-md">${u.jenis_ujian}</span>
-                                </div>`;
-                        });
+                    if (containerUjian) {
+                        if (!result.ujian || result.ujian.length === 0) {
+                            containerUjian.innerHTML = `<div class="text-center py-8 text-xs text-slate-400 italic font-medium">Tidak ada jadwal ujian aktif untuk kelasmu saat ini.</div>`;
+                        } else {
+                            containerUjian.innerHTML = "";
+                            result.ujian.forEach(u => {
+                                containerUjian.innerHTML += `
+                                    <div class="p-3.5 bg-slate-50 border border-slate-150 rounded-xl flex justify-between items-center transition-all hover:bg-white hover:shadow-xs group">
+                                        <div class="space-y-0.5">
+                                            <h4 class="font-bold text-xs text-slate-800 group-hover:text-rose-600 transition-colors">${u.mata_pelajaran}</h4>
+                                            <p class="text-[11px] text-slate-400 font-semibold flex items-center gap-1">
+                                                <i class="fa-regular fa-clock text-[10px]"></i> ${u.tanggal} <span class="text-slate-300">•</span> ${u.jam}
+                                            </p>
+                                        </div>
+                                        <span class="px-2.5 py-0.5 text-[9px] font-black tracking-wide uppercase bg-rose-50 text-rose-600 border border-rose-100 rounded-md shadow-2xs">${u.jenis_ujian}</span>
+                                    </div>`;
+                            });
+                        }
                     }
 
-                    // Render Materi Pengajaran Guru
-                    if (!result.agenda || result.agenda.length === 0) {
-                        containerAgenda.innerHTML = `<p class="text-xs text-slate-400 italic py-3">Belum ada rangkuman materi mengajar dari gurumu.</p>`;
-                    } else {
-                        containerAgenda.innerHTML = "";
-                        result.agenda.forEach(a => {
-                            containerAgenda.innerHTML += `
-                                <div class="pt-3 first:pt-0 space-y-0.5">
-                                    <div class="flex justify-between text-xs text-slate-400 font-bold">
-                                        <span>${a.mata_pelajaran}</span>
-                                        <span>${a.tanggal.split('T')[0]}</span>
-                                    </div>
-                                    <h4 class="font-semibold text-sm text-slate-700">${a.materi}</h4>
-                                    <p class="text-xs text-slate-500 italic font-medium">${a.keterangan || 'Tidak ada catatan tambahan.'}</p>
-                                </div>`;
-                        });
+                    if (containerAgenda) {
+                        if (!result.agenda || result.agenda.length === 0) {
+                            containerAgenda.innerHTML = `<div class="text-center py-8 text-xs text-slate-400 italic font-medium">Belum ada rangkuman materi mengajar dari gurumu.</div>`;
+                        } else {
+                            containerAgenda.innerHTML = "";
+                            result.agenda.forEach(a => {
+                                containerAgenda.innerHTML += `
+                                    <div class="p-4 bg-slate-50 border border-slate-150 rounded-xl space-y-1.5 transition-all hover:bg-white hover:shadow-xs group">
+                                        <div class="flex justify-between items-center text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+                                            <span class="text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100">${a.mata_pelajaran}</span>
+                                            <span class="font-mono">${a.tanggal.split('T')[0]}</span>
+                                        </div>
+                                        <h4 class="font-bold text-xs text-slate-800 leading-snug">${a.materi}</h4>
+                                        <p class="text-[11px] text-slate-500 font-medium italic border-l-2 border-slate-200 pl-2 mt-1 bg-white/50 py-1 rounded-r-md">${a.keterangan || 'Tidak ada catatan tambahan.'}</p>
+                                    </div>`;
+                            });
+                        }
                     }
 
-                    // FIX SINKRONISASI: Render Riwayat Presensi Kehadiran Terintegrasi dengan Backend Baru
-                    if (!result.riwayat_absen || result.riwayat_absen.length === 0) {
-                        containerRiwayat.innerHTML = `<p class="text-xs text-slate-400 italic py-3">Kamu belum memiliki riwayat presensi kehadiran.</p>`;
-                    } else {
-                        containerRiwayat.innerHTML = "";
-                        result.riwayat_absen.forEach(r => {
-                            const badgeColor = r.status === "HADIR" ? "bg-emerald-100 text-emerald-700 border-emerald-200" : "bg-rose-100 text-rose-700 border-rose-200";
-                            containerRiwayat.innerHTML += `
-                                <div class="pt-3 first:pt-0 flex justify-between items-center">
-                                    <div>
-                                        <h4 class="font-bold text-sm text-slate-800">${r.mata_pelajaran}</h4>
-                                        <p class="text-[11px] text-slate-500 font-medium">Materi: ${r.materi}</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <span class="px-2 py-0.5 text-[10px] font-black border rounded-md ${badgeColor}">${r.status}</span>
-                                        <p class="text-[10px] text-slate-400 font-mono mt-1">${r.waktu_absen}</p>
-                                    </div>
-                                </div>`;
-                        });
+                    if (containerRiwayat) {
+                        if (!result.riwayat_absen || result.riwayat_absen.length === 0) {
+                            containerRiwayat.innerHTML = `<div class="text-center py-8 text-xs text-slate-400 italic font-medium">Kamu belum memiliki riwayat presensi kehadiran.</div>`;
+                        } else {
+                            containerRiwayat.innerHTML = "";
+                            result.riwayat_absen.forEach(r => {
+                                const badgeColor = r.status === "HADIR" 
+                                    ? "bg-emerald-50 text-emerald-600 border-emerald-100" 
+                                    : "bg-rose-50 text-rose-600 border-rose-100";
+                                const iconStatus = r.status === "HADIR" ? "fa-circle-check" : "fa-circle-xmark";
+
+                                containerRiwayat.innerHTML += `
+                                    <div class="p-3.5 bg-slate-50 border border-slate-150 rounded-xl flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 transition-all hover:bg-white hover:shadow-xs">
+                                        <div class="space-y-0.5">
+                                            <h4 class="font-bold text-xs text-slate-800">${r.mata_pelajaran}</h4>
+                                            <p class="text-[11px] text-slate-400 font-medium">Pembahasan: <span class="text-slate-600 font-semibold">${r.materi}</span></p>
+                                        </div>
+                                        <div class="flex sm:flex-col justify-between sm:items-end items-center gap-1.5 border-t sm:border-t-0 border-slate-100 pt-2 sm:pt-0">
+                                            <span class="px-2.5 py-0.5 text-[9px] font-black tracking-wide border rounded-md flex items-center gap-1 uppercase shadow-2xs ${badgeColor}">
+                                                <i class="fa-solid ${iconStatus} text-[10px]"></i> ${r.status}
+                                            </span>
+                                            <p class="text-[10px] text-slate-400 font-mono font-medium">${r.waktu_absen}</p>
+                                        </div>
+                                    </div>`;
+                            });
+                        }
                     }
                 } else {
                     throw new Error("Respons status gagal dari server.");
                 }
             } catch (e) {
-                containerUjian.innerHTML = `<p class="text-xs text-red-500">Gagal memuat info ujian.</p>`;
-                containerAgenda.innerHTML = `<p class="text-xs text-red-500">Gagal memuat info materi.</p>`;
-                containerRiwayat.innerHTML = `<p class="text-xs text-red-500">Gagal memuat riwayat presensi.</p>`;
+                if(containerUjian) containerUjian.innerHTML = `<div class="text-center py-4 text-xs font-semibold text-rose-500">Gagal memuat info ujian.</div>`;
+                if(containerAgenda) containerAgenda.innerHTML = `<div class="text-center py-4 text-xs font-semibold text-rose-500">Gagal memuat info materi.</div>`;
+                if(containerRiwayat) containerRiwayat.innerHTML = `<div class="text-center py-4 text-xs font-semibold text-rose-500">Gagal memuat riwayat presensi.</div>`;
             }
         }
 
         function mulaiScanner() {
             const statusDiv = document.getElementById('scanStatus');
-            statusDiv.className = "p-3 bg-amber-50 text-amber-700 border border-amber-200 rounded-xl text-xs font-bold font-mono animate-pulse";
+            statusDiv.className = "p-3 bg-amber-50 text-amber-700 border border-amber-200 rounded-xl text-[11px] font-bold font-mono animate-pulse tracking-wide";
             statusDiv.innerHTML = "Menginisialisasi Kamera Ponsel...";
 
             html5QrcodeInstance = new Html5Qrcode("reader");
@@ -253,7 +516,7 @@
                 onScanSuccess,
                 onScanFailure
             ).then(() => {
-                statusDiv.className = "p-3 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-xl text-xs font-bold font-mono";
+                statusDiv.className = "p-3 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-xl text-[11px] font-bold font-mono tracking-wide";
                 statusDiv.innerHTML = "Kamera Aktif! Silakan Pindai Barcode Guru.";
                 
                 const videoElement = document.querySelector("#reader video");
@@ -263,71 +526,37 @@
                 }
             }).catch(err => {
                 console.error("Gagal inisialisasi kamera utama:", err);
-                statusDiv.className = "p-3 bg-rose-50 text-rose-700 border border-rose-200 rounded-xl text-xs font-bold";
+                statusDiv.className = "p-3 bg-rose-50 text-rose-700 border border-rose-200 rounded-xl text-[11px] font-bold px-4 leading-normal";
                 statusDiv.innerHTML = "Gagal Mengakses Kamera Perangkat. Pastikan Izin Diperbolehkan.";
             });
         }
 
-        async function onScanSuccess(decodedText) {
-            await matikanScanner();
-            const statusDiv = document.getElementById('scanStatus');
-            statusDiv.className = "p-3 bg-blue-50 text-blue-700 border border-blue-200 rounded-xl text-xs font-bold font-mono animate-pulse";
-            statusDiv.innerHTML = "QR Berhasil Dibaca! Mengirim Presensi...";
-
-            try {
-                const response = await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        action: 'scanAbsen',
-                        id_agenda: decodedText,
-                        id_siswa: userLogin.id_user
-                    })
-                });
-                const result = await response.json();
-                
-                // Respons sukses / gagal diatur secara dinamis mengikuti sistem proteksi backend baru
-                if (result.status === "success") {
-                    statusDiv.className = "p-3 bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-xl text-xs font-black";
-                    statusDiv.innerHTML = `🎉 ${result.message}`;
-                    alert(`Presensi Sukses!\n${result.message}`);
-                } else {
-                    statusDiv.className = "p-3 bg-rose-100 text-rose-800 border border-rose-300 rounded-xl text-xs font-bold";
-                    statusDiv.innerHTML = `❌ ${result.message}`;
-                    alert(`Gagal Melakukan Presensi:\n${result.message}`);
-                }
-            } catch (error) {
-                alert("Gangguan jaringan, gagal terhubung ke server PKBM.");
-                statusDiv.innerHTML = "Gagal Sinkronisasi Jaringan.";
-            }
+        function onScanSuccess(decodedText, decodedResult) {
+            alert("QR Terbaca: " + decodedText);
         }
 
-        function onScanFailure(error) {}
+        function onScanFailure(error) {
+            // Callback senyap ketika memindai ulang
+        }
 
         async function matikanScanner() {
             if (html5QrcodeInstance && html5QrcodeInstance.isScanning) {
                 try {
                     await html5QrcodeInstance.stop();
+                    const statusDiv = document.getElementById('scanStatus');
+                    if(statusDiv) statusDiv.innerHTML = "Menunggu Kamera Diaktifkan...";
                 } catch (err) {
-                    console.error("Gagal menghentikan aliran kamera", err);
+                    console.error("Gagal mematikan sensor kamera:", err);
                 }
             }
-            html5QrcodeInstance = null;
-            
-            const statusContainer = document.getElementById('scanStatus');
-            if (statusContainer) {
-                statusContainer.className = "p-3 bg-slate-100 text-slate-600 rounded-xl text-xs font-bold font-mono";
-                statusContainer.innerHTML = "Kamera Dinonaktifkan.";
-            }
-            
-            const readerDiv = document.getElementById('reader');
-            if (readerDiv) readerDiv.innerHTML = ""; 
         }
 
-        async function logout() { 
-            await matikanScanner();
-            sessionStorage.clear(); 
-            window.location.href = "index.html"; 
+        function logout() {
+            if(confirm("Apakah Anda yakin ingin keluar?")) {
+                sessionStorage.clear();
+                window.location.href = "index.html";
+            }
         }
-    </script>
+</script>
 </body>
 </html>
