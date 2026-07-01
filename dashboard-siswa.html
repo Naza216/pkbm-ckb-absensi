@@ -531,9 +531,45 @@
             });
         }
 
-        function onScanSuccess(decodedText, decodedResult) {
-            alert("QR Terbaca: " + decodedText);
+        async function onScanSuccess(decodedText, decodedResult) {
+    // 1. Matikan scanner sementara agar tidak scan berkali-kali
+    await matikanScanner();
+    
+    // 2. Ambil data user yang sedang login dari sessionStorage
+    const userLogin = JSON.parse(sessionStorage.getItem('userLogin'));
+    if (!userLogin) {
+        alert("Sesi login kedaluwarsa. Silakan login kembali.");
+        window.location.href = "index.html";
+        return;
+    }
+
+    alert("QR Terbaca: " + decodedText + "\nMemproses absensi...");
+
+    try {
+        // 3. Kirim data absensi ke Google Apps Script Backend
+        const response = await fetch(WEB_APP_URL, {
+            method: 'POST',
+            body: JSON.stringify({
+                action: 'absenMasuk', // Sesuaikan nama action ini dengan yang ada di main.js kamu
+                id_siswa: userLogin.id,
+                qr_content: decodedText
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (result.status === 'success') {
+            alert("Absen Berhasil: " + result.message);
+            // Segarkan halaman atau panggil fungsi muat data untuk memperbarui status di UI
+            location.reload(); 
+        } else {
+            alert("Gagal Absen: " + result.message);
         }
+    } catch (err) {
+        alert("Gangguan transmisi data ke cloud database.");
+        console.error(err);
+    }
+}
 
         function onScanFailure(error) {
             // Callback senyap ketika memindai ulang
