@@ -444,8 +444,6 @@
                 }
                 
                 result.data.forEach(jurnal => {
-                        // --- PERBAIKAN DI SINI ---
-                        // Mengonversi waktu menggunakan fungsi formatTanggalWaktu agar menampilkan Tanggal dan Jam secara akurat
                         const jamBukaFormat = formatTanggalWaktu(jurnal.tanggal, jurnal.jam_buka);
                         const jamKunciFormat = formatTanggalWaktu(jurnal.tanggal, jurnal.jam_kunci);
                         
@@ -457,7 +455,7 @@
                             </td>
                             <td class="px-6 py-4 font-bold text-emerald-700">${jurnal.mata_pelajaran || '-'} <span class="block text-[10px] font-medium text-slate-400 mt-0.5">Kelas: ${jurnal.kelas || '-'}</span></td>
                             <td class="px-6 py-4 font-medium text-slate-600 max-w-xs truncate" title="${jurnal.materi || ''}">${jurnal.materi || '-'}</td>
-                                                        <td class="px-6 py-4 text-center font-mono text-[11px] font-bold text-slate-600 bg-slate-50/50 leading-relaxed">
+                            <td class="px-6 py-4 text-center font-mono text-[11px] font-bold text-slate-600 bg-slate-50/50 leading-relaxed">
                                     <div class="text-emerald-600"><i class="fa-solid fa-lock-open text-[10px]"></i> Buka: ${jamBukaFormat}</div>
                                     <div class="text-rose-600 mt-0.5"><i class="fa-solid fa-lock text-[10px]"></i> Kunci: ${jamKunciFormat}</div>
                                 </td>
@@ -596,6 +594,7 @@
                             </div>`;
                     }
                     
+                    // FIXED: Mengubah pemanggilan 'row' menjadi 'item' agar sesuai dengan definisi parameter di forEach
                     tbody.innerHTML += `
                         <tr class="hover:bg-slate-50/80 transition-colors">
                             <td class="px-6 py-4 font-mono text-xs font-semibold text-slate-400">${item.id || '-'}</td>
@@ -617,30 +616,29 @@
             tbody.innerHTML = `<tr><td colspan="6" class="text-center text-rose-500 py-6 font-semibold"><i class="fa-solid fa-triangle-exclamation mr-1.5"></i>Gagal memuat berkas keringanan.</td></tr>`; 
         }
     }
+    
     function formatJam(isoString) {
     if (!isoString || isoString === "-") return "-";
         try {
             const date = new Date(isoString);
-            // Mengambil jam dan menit, lalu menambah angka 0 di depan jika di bawah 10
             const jam = String(date.getHours()).padStart(2, '0');
             const menit = String(date.getMinutes()).padStart(2, '0');
             return `${jam}:${menit}`;
         } catch (e) {
-            return isoString; // Kembalikan string asli jika gagal parsing
+            return isoString;
         }
     }
+    
     function formatTanggalWaktu(stringTanggal, stringJam) {
         if (!stringJam || stringJam === "-") return "-";
         try {
             const tglObj = new Date(stringTanggal);
             const jamObj = new Date(stringJam);
             
-            // Ambil komponen tanggal dari stringTanggal
             const tgl = String(tglObj.getDate()).padStart(2, '0');
             const bln = String(tglObj.getMonth() + 1).padStart(2, '0');
             const thn = tglObj.getFullYear();
             
-            // Ambil komponen jam dari stringJam
             const jam = String(jamObj.getHours()).padStart(2, '0');
             const menit = String(jamObj.getMinutes()).padStart(2, '0');
             
