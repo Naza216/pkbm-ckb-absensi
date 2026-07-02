@@ -13,7 +13,7 @@
     <div class="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-sky-400/10 to-teal-400/5 blur-3xl rounded-full pointer-events-none z-0"></div>
     <div class="absolute bottom-10 left-64 w-80 h-80 bg-gradient-to-tr from-emerald-400/10 to-cyan-400/5 blur-3xl rounded-full pointer-events-none z-0"></div>
 
-    <aside class="w-full md:w-64 bg-white/90 backdrop-blur-md border-b md:border-b-0 md:border-r border-slate-200/80 flex flex-col md:fixed md:inset-y-0 md:left-0 z-50 shadow-[2px_0_20px_-5px_rgba(0,0,0,0.03)]">
+    <aside id="sidebar" class="w-full md:w-64 bg-white/90 backdrop-blur-md border-b md:border-b-0 md:border-r border-slate-200/80 flex flex-col md:fixed md:inset-y-0 md:left-0 z-50 shadow-[2px_0_20px_-5px_rgba(0,0,0,0.03)] transition-all duration-300">
         <div class="p-5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center md:block">
             <div class="flex flex-col gap-1">
                 <div class="flex items-center gap-2">
@@ -44,7 +44,6 @@
             <button onclick="gantiMenu('Riwayat', this)" class="menu-btn w-full text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-transparent hover:border-slate-100 font-medium flex items-center gap-3 px-3.5 py-3 rounded-xl transition-all text-xs cursor-pointer text-left">
                 <i class="fa-solid fa-clock-rotate-left text-sm w-4 text-center text-amber-500"></i> Riwayat Presensi
             </button>
-            
             <button onclick="gantiMenu('Keringanan', this)" class="menu-btn w-full text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-transparent hover:border-slate-100 font-medium flex items-center gap-3 px-3.5 py-3 rounded-xl transition-all text-xs cursor-pointer text-left">
                 <i class="fa-solid fa-file-medical text-sm w-4 text-center text-indigo-500"></i> Pengajuan Keringanan
             </button>
@@ -71,17 +70,21 @@
         </div>
     </aside>
 
-    <main class="flex-1 md:pl-64 min-h-screen flex flex-col relative z-10">
+    <main id="mainContent" class="flex-1 md:pl-64 min-h-screen flex flex-col relative z-10 transition-all duration-300">
         
         <header class="bg-white/80 backdrop-blur-md border-b border-slate-200/80 px-6 py-4 flex justify-between items-center shadow-[0_2px_20px_-5px_rgba(0,0,0,0.03)]">
-            <div>
-                <h2 id="judulHalaman" class="text-base font-black text-slate-800 tracking-tight">Beranda Belajar</h2>
-                <p id="deskripsiHalaman" class="text-[11px] text-slate-400 mt-0.5 font-medium">Selamat datang kembali! Periksa informasi akademik terupdate kamu di sini.</p>
+            <div class="flex items-center gap-3">
+                <button onclick="toggleSidebar()" class="w-10 h-10 rounded-lg hover:bg-slate-100 transition cursor-pointer flex items-center justify-center">
+                    <i class="fa-solid fa-bars text-slate-600"></i>
+                </button>
+                <div>
+                    <h2 id="judulHalaman" class="text-base font-black text-slate-800 tracking-tight">Beranda Belajar</h2>
+                    <p id="deskripsiHalaman" class="text-[11px] text-slate-400 mt-0.5 font-medium">Selamat datang kembali! Periksa informasi akademik terupdate kamu di sini.</p>
+                </div>
             </div>
         </header>
 
         <div class="p-4 sm:p-6 flex-1 max-w-4xl w-full mx-auto">
-
             <div id="panel-Beranda" class="menu-panel space-y-5">
                 <div class="bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 rounded-2xl p-6 text-white shadow-md shadow-sky-500/10 relative overflow-hidden">
                     <div class="absolute right-[-5%] top-[-20%] w-40 h-40 bg-white/10 blur-2xl rounded-full"></div>
@@ -243,47 +246,58 @@
                     </div>
                 </div>
             </div>
-
         </div>
+
     </main>
 
     <script>
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw-eFOXPYKVMRguM0_Fwi43DrCmj9_fiL5UnuCfSray3hPPv_brk_sKwRWrqXYhYOEXeg/exec"; 
-        let userLogin = null;
-        let html5QrcodeInstance = null; 
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw-eFOXPYKVMRguM0_Fwi43DrCmj9_fiL5UnuCfSray3hPPv_brk_sKwRWrqXYhYOEXeg/exec"; 
+    let userLogin = null;
+    let html5QrcodeInstance = null; 
+    let sidebarOpen = true;
 
-        window.onload = function() {
-            const sessionData = sessionStorage.getItem('userLogin');
-            if (!sessionData) { window.location.href = "index.html"; return; }
-            userLogin = JSON.parse(sessionData);
-            
-            if (userLogin.role !== "siswa") {
-                alert("Akses ditolak! Halaman ini khusus untuk Siswa.");
-                window.location.href = "index.html"; return;
-            }
-            
-            document.getElementById('namaSiswa').innerText = userLogin.nama_lengkap;
-            document.getElementById('kelasBadge').innerText = "Kelas: " + userLogin.kelas;
-            
-            if (document.getElementById('namaProfilKiri')) document.getElementById('namaProfilKiri').innerText = userLogin.nama_lengkap;
-            if (document.getElementById('detNama')) document.getElementById('detNama').innerText = userLogin.nama_lengkap;
-            if (document.getElementById('detUsername')) {
-                document.getElementById('detUsername').innerText = userLogin.username || userLogin.USERNAME || userLogin.NISN || "-";
-            }
-            if (document.getElementById('detKelas')) document.getElementById('detKelas').innerText = userLogin.kelas;    
+    window.onload = function() {
+        const sessionData = sessionStorage.getItem('userLogin');
+        if (!sessionData) { window.location.href = "index.html"; return; }
+        userLogin = JSON.parse(sessionData);
+        
+        if (userLogin.role !== "siswa") {
+            alert("Akses ditolak! Halaman ini khusus untuk Siswa.");
+            window.location.href = "index.html"; return;
+        }
+        
+        // Sinkronisasi Data Profil di Header & UI
+        if (document.getElementById('namaSiswa')) document.getElementById('namaSiswa').innerText = userLogin.nama_lengkap;
+        if (document.getElementById('kelasBadge')) document.getElementById('kelasBadge').innerText = "Kelas: " + userLogin.kelas;
+        if (document.getElementById('namaProfilKiri')) document.getElementById('namaProfilKiri').innerText = userLogin.nama_lengkap;
+        if (document.getElementById('detNama')) document.getElementById('detNama').innerText = userLogin.nama_lengkap;
+        if (document.getElementById('detKelas')) document.getElementById('detKelas').innerText = userLogin.kelas;    
+        if (document.getElementById('detUsername')) {
+            document.getElementById('detUsername').innerText = userLogin.username || userLogin.USERNAME || userLogin.NISN || "-";
+        }
 
-            muatDataDashboardSiswa();
-        };
+        muatDataDashboardSiswa();
+    };
 
-        async function gantiMenu(targetPanel, elemenTombol) {
+    // FIX: Menggabungkan dua fungsi gantiMenu menjadi satu fungsi yang utuh dan solid
+    async function gantiMenu(targetPanel, elemenTombol) {
+        // Matikan scanner terlebih dahulu jika sedang aktif
+        if (typeof matikanScanner === "function") {
             await matikanScanner();
+        }
 
-            document.querySelectorAll('.menu-panel').forEach(p => p.classList.add('hidden'));
-            document.getElementById('panel-' + targetPanel).classList.remove('hidden');
-            
-            const judul = document.getElementById('judulHalaman');
-            const deskripsi = document.getElementById('deskripsiHalaman');
+        // Sembunyikan semua panel menu
+        document.querySelectorAll('.menu-panel').forEach(p => p.classList.add('hidden'));
+        
+        // Tampilkan panel yang dipilih
+        const targetPanelEl = document.getElementById('panel-' + targetPanel);
+        if (targetPanelEl) targetPanelEl.classList.remove('hidden');
+        
+        // Perbarui Judul dan Deskripsi Header
+        const judul = document.getElementById('judulHalaman');
+        const deskripsi = document.getElementById('deskripsiHalaman');
 
+        if (judul && deskripsi) {
             if (targetPanel === 'Beranda') {
                 judul.innerText = "Beranda Belajar";
                 deskripsi.innerText = "Selamat datang kembali! Periksa informasi akademik terupdate kamu di sini.";
@@ -311,29 +325,55 @@
                 deskripsi.innerText = "Lakukan check-in kehadiran di kelas menggunakan sensor pemindai QR Code.";
                 mulaiScanner();
             }
-
-            document.querySelectorAll('.menu-btn').forEach(b => {
-                b.className = "menu-btn w-full text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-transparent hover:border-slate-100 font-medium flex items-center gap-3 px-3.5 py-3 rounded-xl transition-all text-xs cursor-pointer text-left";
-            });
-            elemenTombol.className = "menu-btn w-full bg-gradient-to-r from-sky-500 via-sky-600 to-blue-600 text-white font-bold flex items-center gap-3 px-3.5 py-3 rounded-xl shadow-md shadow-sky-500/15 transition-all text-xs cursor-pointer text-left";
         }
 
-        // PERBAIKAN LOGIKA TRANSMISI FORM PENGAJUAN KERINGANAN (SINKRONISASI DATABASE)
-        // PERBAIKAN LOGIKA TRANSMISI FORM PENGAJUAN KERINGANAN (SINKRONISASI DATABASE)
-        document.getElementById('formKeringanan').addEventListener('submit', async function(e) {
+        // ATUR ULANG WARNA TOMBOL NAVIGASI AGAR TIDAK POLOS
+        // 1. Kembalikan semua tombol menu ke tampilan default (tidak aktif)
+        document.querySelectorAll('.menu-btn').forEach(b => {
+            b.className = "menu-btn w-full text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-transparent hover:border-slate-100 font-medium flex items-center gap-3 px-3.5 py-3 rounded-xl transition-all text-xs cursor-pointer text-left group";
+            
+            const icon = b.querySelector('i');
+            if (icon) {
+                // Hapus class warna teks dinamis sebelumnya
+                icon.className = icon.className.replace(/\btext-\S+/g, '').trim(); 
+                const textMenu = b.textContent.trim();
+                
+                if (textMenu.includes("Beranda")) icon.className = "fa-solid fa-house text-sm w-4 text-center text-slate-400 group-hover:text-slate-600";
+                else if (textMenu.includes("Jadwal Evaluasi")) icon.className = "fa-solid fa-bell text-sm w-4 text-center text-rose-500";
+                else if (textMenu.includes("Modul & Pembahasan")) icon.className = "fa-solid fa-book-open text-sm w-4 text-center text-emerald-500";
+                else if (textMenu.includes("Riwayat Presensi")) icon.className = "fa-solid fa-clock-rotate-left text-sm w-4 text-center text-amber-500";
+                else if (textMenu.includes("Pengajuan Keringanan")) icon.className = "fa-solid fa-file-medical text-sm w-4 text-center text-indigo-500";
+                else if (textMenu.includes("Profil Saya")) icon.className = "fa-solid fa-circle-user text-sm w-4 text-center text-indigo-500";
+                else if (textMenu.includes("Scan Presensi")) icon.className = "fa-solid fa-qrcode text-sm w-4 text-center text-sky-500";
+            }
+        });
+
+        // 2. Berikan gaya aktif (Gradasi Biru Premium) pada tombol yang sedang diklik
+        if (elemenTombol) {
+            elemenTombol.className = "menu-btn w-full bg-gradient-to-r from-sky-500 via-sky-600 to-blue-600 text-white font-bold flex items-center gap-3 px-4 py-2.5 rounded-xl shadow-md shadow-sky-500/15 border border-sky-600/10 transition-all duration-200 scale-[1.01] cursor-pointer text-left";
+            
+            const activeIcon = elemenTombol.querySelector('i');
+            if (activeIcon) {
+                activeIcon.className = activeIcon.className.replace(/\btext-\S+/g, '').trim();
+                activeIcon.classList.add('text-white');
+            }
+        }
+    }
+
+    // TRANSMISI FORM PENGAJUAN KERINGANAN (SINKRONISASI DATABASE)
+    const formKeringanan = document.getElementById('formKeringanan');
+    if (formKeringanan) {
+        formKeringanan.addEventListener('submit', async function(e) {
             e.preventDefault();
             const btn = document.getElementById('btnKirimKeringanan') || document.querySelector("button[type='submit']");
             const fileInput = document.getElementById('buktiFotoSiswa');
             
-            // Validasi keberadaan file gambar bukti
             if (!fileInput || fileInput.files.length === 0) {
                 alert("Silakan pilih file gambar bukti terlebih dahulu!");
                 return;
             }
 
             const file = fileInput.files[0];
-            
-            // Validasi ukuran kapasitas berkas gambar (Maksimal Batas 5MB)
             if (file.size > 5 * 1024 * 1024) {
                 alert("Ukuran file terlalu besar! Maksimal batas berkas adalah 5MB.");
                 return;
@@ -342,16 +382,13 @@
             btn.disabled = true;
             btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin mr-1.5"></i> Memproses Berkas...`;
 
-            // Membaca data fisik file lokal untuk ditransfer ke format String Base64
             const reader = new FileReader();
             reader.readAsDataURL(file);
             
             reader.onload = async function() {
                 const base64String = reader.result;
-
                 btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin mr-1.5"></i> Mengunggah ke Server...`;
 
-                // Sinkronisasi data sesi ID Pengguna (id_user) agar pas dengan kolom target di Sheet database (id_siswa)
                 const fixedIdSiswa = userLogin.id_user || userLogin.id_siswa || "-";
 
                 try {
@@ -372,7 +409,6 @@
                     
                     if (result.status === "success") {
                         document.getElementById('formKeringanan').reset();
-                        // Alihkan menu kembali ke Beranda utama setelah pengisian berkas sukses
                         const tombolBeranda = document.querySelector('.menu-btn');
                         if (tombolBeranda) {
                             gantiMenu('Beranda', tombolBeranda);
@@ -395,149 +431,156 @@
                 btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Kirim Form Pengajuan`;
             };
         });
+    }
 
-        async function muatDataDashboardSiswa() {
-            const containerUjian = document.getElementById('listUjianSiswa');
-            const containerAgenda = document.getElementById('listAgendaSiswa');
-            const containerRiwayat = document.getElementById('listRiwayatAbsen');
-            
-            if(containerUjian) containerUjian.innerHTML = `<div class="text-center py-6 text-xs text-slate-400 font-medium italic"><i class="fa-solid fa-spinner animate-spin mr-1.5 text-rose-400"></i> Menyelaraskan info ujian...</div>`;
-            if(containerAgenda) containerAgenda.innerHTML = `<div class="text-center py-6 text-xs text-slate-400 font-medium italic"><i class="fa-solid fa-spinner animate-spin mr-1.5 text-emerald-400"></i> Memuat catatan modul...</div>`;
-            if(containerRiwayat) containerRiwayat.innerHTML = `<div class="text-center py-6 text-xs text-slate-400 font-medium italic"><i class="fa-solid fa-spinner animate-spin mr-1.5 text-sky-400"></i> Mengambil riwayat presensi...</div>`;
-            
-            try {
-                const response = await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ 
-                        action: 'getSiswaDashboard', 
-                        kelas: userLogin.kelas,
-                        id_siswa: userLogin.id_siswa || userLogin.id_user || "-" 
-                    })
-                });
-                const result = await response.json();
-                
-                if (result.status === "success") {
-                    if (containerUjian) {
-                        if (!result.ujian || result.ujian.length === 0) {
-                            containerUjian.innerHTML = `<div class="text-center py-8 text-xs text-slate-400 italic font-medium">Tidak ada jadwal ujian aktif untuk kelasmu saat ini.</div>`;
-                        } else {
-                            containerUjian.innerHTML = "";
-                            result.ujian.forEach(u => {
-                                containerUjian.innerHTML += `
-                                    <div class="p-3.5 bg-slate-50 border border-slate-150 rounded-xl flex justify-between items-center transition-all hover:bg-white hover:shadow-xs group">
-                                        <div class="space-y-0.5">
-                                            <h4 class="font-bold text-xs text-slate-800 group-hover:text-rose-600 transition-colors">${u.mata_pelajaran}</h4>
-                                            <p class="text-[11px] text-slate-400 font-semibold flex items-center gap-1">
-                                                <i class="fa-regular fa-clock text-[10px]"></i> ${u.tanggal} <span class="text-slate-300">•</span> ${u.jam}
-                                            </p>
-                                        </div>
-                                        <span class="px-2.5 py-0.5 text-[9px] font-black tracking-wide uppercase bg-rose-50 text-rose-600 border border-rose-100 rounded-md shadow-2xs">${u.jenis_ujian}</span>
-                                    </div>`;
-                            });
-                        }
-                    }
-
-                    if (containerAgenda) {
-                        if (!result.agenda || result.agenda.length === 0) {
-                            containerAgenda.innerHTML = `<div class="text-center py-8 text-xs text-slate-400 italic font-medium">Belum ada rangkuman materi mengajar dari gurumu.</div>`;
-                        } else {
-                            containerAgenda.innerHTML = "";
-                            result.agenda.forEach(a => {
-                                containerAgenda.innerHTML += `
-                                    <div class="p-4 bg-slate-50 border border-slate-150 rounded-xl space-y-1.5 transition-all hover:bg-white hover:shadow-xs group">
-                                        <div class="flex justify-between items-center text-[10px] text-slate-400 font-bold uppercase tracking-wider">
-                                            <span class="text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100">${a.mata_pelajaran}</span>
-                                            <span class="font-mono">${a.tanggal.split('T')[0]}</span>
-                                        </div>
-                                        <h4 class="font-bold text-xs text-slate-800 leading-snug">${a.materi}</h4>
-                                        <p class="text-[11px] text-slate-500 font-medium italic border-l-2 border-slate-200 pl-2 mt-1 bg-white/50 py-1 rounded-r-md">${a.keterangan || 'Tidak ada catatan tambahan.'}</p>
-                                    </div>`;
-                            });
-                        }
-                    }
-
-                    if (containerRiwayat) {
-                        if (!result.riwayat_absen || result.riwayat_absen.length === 0) {
-                            containerRiwayat.innerHTML = `<div class="text-center py-8 text-xs text-slate-400 italic font-medium">Kamu belum memiliki riwayat presensi kehadiran.</div>`;
-                        } else {
-                            containerRiwayat.innerHTML = "";
-                            result.riwayat_absen.forEach(r => {
-                                const badgeColor = r.status === "HADIR" 
-                                    ? "bg-emerald-50 text-emerald-600 border-emerald-100" 
-                                    : "bg-rose-50 text-rose-600 border-rose-100";
-                                const iconStatus = r.status === "HADIR" ? "fa-circle-check" : "fa-circle-xmark";
-
-                                containerRiwayat.innerHTML += `
-                                    <div class="p-3.5 bg-slate-50 border border-slate-150 rounded-xl flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 transition-all hover:bg-white hover:shadow-xs">
-                                        <div class="space-y-0.5">
-                                            <h4 class="font-bold text-xs text-slate-800">${r.mata_pelajaran}</h4>
-                                            <p class="text-[11px] text-slate-400 font-medium">Pembahasan: <span class="text-slate-600 font-semibold">${r.materi}</span></p>
-                                        </div>
-                                        <div class="flex sm:flex-col justify-between sm:items-end items-center gap-1.5 border-t sm:border-t-0 border-slate-100 pt-2 sm:pt-0">
-                                            <span class="px-2.5 py-0.5 text-[9px] font-black tracking-wide border rounded-md flex items-center gap-1 uppercase shadow-2xs ${badgeColor}">
-                                                <i class="fa-solid ${iconStatus} text-[10px]"></i> ${r.status}
-                                            </span>
-                                            <p class="text-[10px] text-slate-400 font-mono font-medium">${r.waktu_absen}</p>
-                                        </div>
-                                    </div>`;
-                            });
-                        }
-                    }
-                } else {
-                    throw new Error("Respons status gagal dari server.");
-                }
-            } catch (e) {
-                if(containerUjian) containerUjian.innerHTML = `<div class="text-center py-4 text-xs font-semibold text-rose-500">Gagal memuat info ujian.</div>`;
-                if(containerAgenda) containerAgenda.innerHTML = `<div class="text-center py-4 text-xs font-semibold text-rose-500">Gagal memuat info materi.</div>`;
-                if(containerRiwayat) containerRiwayat.innerHTML = `<div class="text-center py-4 text-xs font-semibold text-rose-500">Gagal memuat riwayat presensi.</div>`;
-            }
-        }
-
-        function mulaiScanner() {
-            const statusDiv = document.getElementById('scanStatus');
-            statusDiv.className = "p-3 bg-amber-50 text-amber-700 border border-amber-200 rounded-xl text-[11px] font-bold font-mono animate-pulse tracking-wide";
-            statusDiv.innerHTML = "Menginisialisasi Kamera Ponsel...";
-
-            html5QrcodeInstance = new Html5Qrcode("reader");
-
-            const config = { 
-                fps: 10, 
-                qrbox: function(viewfinderWidth, viewfinderHeight) {
-                    const minEdge = Math.min(viewfinderWidth, viewfinderHeight);
-                    const boxSize = Math.floor(minEdge * 0.7);
-                    return { width: boxSize, height: boxSize };
-                },
-                aspectRatio: 1.0 
-            };
-
-            html5QrcodeInstance.start(
-                { facingMode: "environment" }, 
-                config, 
-                onScanSuccess,
-                onScanFailure
-            ).then(() => {
-                statusDiv.className = "p-3 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-xl text-[11px] font-bold font-mono tracking-wide";
-                statusDiv.innerHTML = "Kamera Aktif! Silakan Pindai Barcode Guru.";
-                
-                const videoElement = document.querySelector("#reader video");
-                if (videoElement) {
-                    videoElement.setAttribute("playsinline", "true");
-                    videoElement.setAttribute("webkit-playsinline", "true");
-                }
-            }).catch(err => {
-                console.error("Gagal inisialisasi kamera utama:", err);
-                statusDiv.className = "p-3 bg-rose-50 text-rose-700 border border-rose-200 rounded-xl text-[11px] font-bold px-4 leading-normal";
-                statusDiv.innerHTML = "Gagal Mengakses Kamera Perangkat. Pastikan Izin Diperbolehkan.";
+    // LOAD DATA REALTIME DARI DATABASE GOOGLE SHEETS
+    async function muatDataDashboardSiswa() {
+        const containerUjian = document.getElementById('listUjianSiswa');
+        const containerAgenda = document.getElementById('listAgendaSiswa');
+        const containerRiwayat = document.getElementById('listRiwayatAbsen');
+        
+        if(containerUjian) containerUjian.innerHTML = `<div class="text-center py-6 text-xs text-slate-400 font-medium italic"><i class="fa-solid fa-spinner animate-spin mr-1.5 text-rose-400"></i> Menyelaraskan info ujian...</div>`;
+        if(containerAgenda) containerAgenda.innerHTML = `<div class="text-center py-6 text-xs text-slate-400 font-medium italic"><i class="fa-solid fa-spinner animate-spin mr-1.5 text-emerald-400"></i> Memuat catatan modul...</div>`;
+        if(containerRiwayat) containerRiwayat.innerHTML = `<div class="text-center py-6 text-xs text-slate-400 font-medium italic"><i class="fa-solid fa-spinner animate-spin mr-1.5 text-sky-400"></i> Mengambil riwayat presensi...</div>`;
+        
+        try {
+            const response = await fetch(WEB_APP_URL, {
+                method: 'POST',
+                body: JSON.stringify({ 
+                    action: 'getSiswaDashboard', 
+                    kelas: userLogin.kelas,
+                    id_siswa: userLogin.id_siswa || userLogin.id_user || "-" 
+                })
             });
-        }
+            const result = await response.json();
+            
+            if (result.status === "success") {
+                // Render List Ujian
+                if (containerUjian) {
+                    if (!result.ujian || result.ujian.length === 0) {
+                        containerUjian.innerHTML = `<div class="text-center py-8 text-xs text-slate-400 italic font-medium">Tidak ada jadwal ujian aktif untuk kelasmu saat ini.</div>`;
+                    } else {
+                        containerUjian.innerHTML = "";
+                        result.ujian.forEach(u => {
+                            containerUjian.innerHTML += `
+                                <div class="p-3.5 bg-slate-50 border border-slate-150 rounded-xl flex justify-between items-center transition-all hover:bg-white hover:shadow-xs group">
+                                    <div class="space-y-0.5">
+                                        <h4 class="font-bold text-xs text-slate-800 group-hover:text-rose-600 transition-colors">${u.mata_pelajaran}</h4>
+                                        <p class="text-[11px] text-slate-400 font-semibold flex items-center gap-1">
+                                            <i class="fa-regular fa-clock text-[10px]"></i> ${u.tanggal} <span class="text-slate-300">•</span> ${u.jam}
+                                        </p>
+                                    </div>
+                                    <span class="px-2.5 py-0.5 text-[9px] font-black tracking-wide uppercase bg-rose-50 text-rose-600 border border-rose-100 rounded-md shadow-2xs">${u.jenis_ujian}</span>
+                                </div>`;
+                        });
+                    }
+                }
 
-        async function onScanSuccess(decodedText, decodedResult) {
-        // 1. Matikan kamera scanner sementara agar tidak dobel mengirim request
+                // Render List Modul/Agenda
+                if (containerAgenda) {
+                    if (!result.agenda || result.agenda.length === 0) {
+                        containerAgenda.innerHTML = `<div class="text-center py-8 text-xs text-slate-400 italic font-medium">Belum ada rangkuman materi mengajar dari gurumu.</div>`;
+                    } else {
+                        containerAgenda.innerHTML = "";
+                        result.agenda.forEach(a => {
+                            containerAgenda.innerHTML += `
+                                <div class="p-4 bg-slate-50 border border-slate-150 rounded-xl space-y-1.5 transition-all hover:bg-white hover:shadow-xs group">
+                                    <div class="flex justify-between items-center text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+                                        <span class="text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100">${a.mata_pelajaran}</span>
+                                        <span class="font-mono">${a.tanggal ? a.tanggal.split('T')[0] : '-'}</span>
+                                    </div>
+                                    <h4 class="font-bold text-xs text-slate-800 leading-snug">${a.materi}</h4>
+                                    <p class="text-[11px] text-slate-500 font-medium italic border-l-2 border-slate-200 pl-2 mt-1 bg-white/50 py-1 rounded-r-md">${a.keterangan || 'Tidak ada catatan tambahan.'}</p>
+                                </div>`;
+                        });
+                    }
+                }
+
+                // Render Riwayat Absensi
+                if (containerRiwayat) {
+                    if (!result.riwayat_absen || result.riwayat_absen.length === 0) {
+                        containerRiwayat.innerHTML = `<div class="text-center py-8 text-xs text-slate-400 italic font-medium">Kamu belum memiliki riwayat presensi kehadiran.</div>`;
+                    } else {
+                        containerRiwayat.innerHTML = "";
+                        result.riwayat_absen.forEach(r => {
+                            const badgeColor = r.status === "HADIR" 
+                                ? "bg-emerald-50 text-emerald-600 border-emerald-100" 
+                                : "bg-rose-50 text-rose-600 border-rose-100";
+                            const iconStatus = r.status === "HADIR" ? "fa-circle-check" : "fa-circle-xmark";
+
+                            containerRiwayat.innerHTML += `
+                                <div class="p-3.5 bg-slate-50 border border-slate-150 rounded-xl flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 transition-all hover:bg-white hover:shadow-xs">
+                                    <div class="space-y-0.5">
+                                        <h4 class="font-bold text-xs text-slate-800">${r.mata_pelajaran}</h4>
+                                        <p class="text-[11px] text-slate-400 font-medium">Pembahasan: <span class="text-slate-600 font-semibold">${r.materi}</span></p>
+                                    </div>
+                                    <div class="flex sm:flex-col justify-between sm:items-end items-center gap-1.5 border-t sm:border-t-0 border-slate-100 pt-2 sm:pt-0">
+                                        <span class="px-2.5 py-0.5 text-[9px] font-black tracking-wide border rounded-md flex items-center gap-1 uppercase shadow-2xs ${badgeColor}">
+                                            <i class="fa-solid ${iconStatus} text-[10px]"></i> ${r.status}
+                                        </span>
+                                        <p class="text-[10px] text-slate-400 font-mono font-medium">${r.waktu_absen}</p>
+                                    </div>
+                                </div>`;
+                        });
+                    }
+                }
+            } else {
+                throw new Error("Respons status gagal dari server.");
+            }
+        } catch (e) {
+            console.error(e);
+            if(containerUjian) containerUjian.innerHTML = `<div class="text-center py-4 text-xs font-semibold text-rose-500">Gagal memuat info ujian.</div>`;
+            if(containerAgenda) containerAgenda.innerHTML = `<div class="text-center py-4 text-xs font-semibold text-rose-500">Gagal memuat info materi.</div>`;
+            if(containerRiwayat) containerRiwayat.innerHTML = `<div class="text-center py-4 text-xs font-semibold text-rose-500">Gagal memuat riwayat presensi.</div>`;
+        }
+    }
+
+    // ENGINE QR CODE SCANNER (HTML5-QRCODE)
+    function mulaiScanner() {
+        const statusDiv = document.getElementById('scanStatus');
+        if (!statusDiv) return;
+        
+        statusDiv.className = "p-3 bg-amber-50 text-amber-700 border border-amber-200 rounded-xl text-[11px] font-bold font-mono animate-pulse tracking-wide";
+        statusDiv.innerHTML = "Menginisialisasi Kamera Ponsel...";
+
+        html5QrcodeInstance = new Html5Qrcode("reader");
+
+        const config = { 
+            fps: 10, 
+            qrbox: function(viewfinderWidth, viewfinderHeight) {
+                const minEdge = Math.min(viewfinderWidth, viewfinderHeight);
+                const boxSize = Math.floor(minEdge * 0.7);
+                return { width: boxSize, height: boxSize };
+            },
+            aspectRatio: 1.0 
+        };
+
+        html5QrcodeInstance.start(
+            { facingMode: "environment" }, 
+            config, 
+            onScanSuccess,
+            onScanFailure
+        ).then(() => {
+            statusDiv.className = "p-3 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-xl text-[11px] font-bold font-mono tracking-wide";
+            statusDiv.innerHTML = "Kamera Aktif! Silakan Pindai Barcode Guru.";
+            
+            const videoElement = document.querySelector("#reader video");
+            if (videoElement) {
+                videoElement.setAttribute("playsinline", "true");
+                videoElement.setAttribute("webkit-playsinline", "true");
+            }
+        }).catch(err => {
+            console.error("Gagal inisialisasi kamera utama:", err);
+            statusDiv.className = "p-3 bg-rose-50 text-rose-700 border border-rose-200 rounded-xl text-[11px] font-bold px-4 leading-normal";
+            statusDiv.innerHTML = "Gagal Mengakses Kamera Perangkat. Pastikan Izin Diperbolehkan.";
+        });
+    }
+
+    async function onScanSuccess(decodedText, decodedResult) {
         await matikanScanner();
         
-        // 2. Ambil data profil siswa yang login
-        const userLogin = JSON.parse(sessionStorage.getItem('userLogin'));
-        if (!userLogin) {
+        const currentUser = JSON.parse(sessionStorage.getItem('userLogin'));
+        if (!currentUser) {
             alert("Sesi login kedaluwarsa. Silakan login kembali.");
             window.location.href = "index.html";
             return;
@@ -546,13 +589,12 @@
         alert("QR Terbaca: " + decodedText + "\nSedang memproses absensi...");
 
         try {
-            // 3. Kirim ke Google Apps Script backend
             const response = await fetch(WEB_APP_URL, {
                 method: 'POST',
                 body: JSON.stringify({
-                    action: 'scanAbsen',        // ⬅️ Harus sesuai dengan 'scanAbsen' di kode.gs
-                    id_agenda: decodedText,    // ⬅️ decodedText adalah ID Agenda dari QR Code Guru
-                    id_siswa: userLogin.id_user // ⬅️ Sesuaikan properti ID User dari sessionStorage kamu
+                    action: 'scanAbsen',
+                    id_agenda: decodedText, 
+                    id_siswa: currentUser.id_user || currentUser.id_siswa
                 })
             });
             
@@ -560,10 +602,9 @@
             
             if (result.status === 'success') {
                 alert(result.message);
-                location.reload(); // Muat ulang agar tabel dashboard siswa terupdate
+                location.reload(); 
             } else {
                 alert("Gagal Absen: " + result.message);
-                // Jika gagal, nyalakan kembali scanner jika dibutuhkan atau reload halaman
                 location.reload(); 
             }
         } catch (err) {
@@ -572,28 +613,49 @@
         }
     }
 
-        function onScanFailure(error) {
-            // Callback senyap ketika memindai ulang
-        }
+    function onScanFailure(error) {
+        // Callback senyap (diam) saat pencarian ulang frame QR
+    }
 
-        async function matikanScanner() {
-            if (html5QrcodeInstance && html5QrcodeInstance.isScanning) {
-                try {
-                    await html5QrcodeInstance.stop();
-                    const statusDiv = document.getElementById('scanStatus');
-                    if(statusDiv) statusDiv.innerHTML = "Menunggu Kamera Diaktifkan...";
-                } catch (err) {
-                    console.error("Gagal mematikan sensor kamera:", err);
-                }
+    async function matikanScanner() {
+        if (html5QrcodeInstance && html5QrcodeInstance.isScanning) {
+            try {
+                await html5QrcodeInstance.stop();
+                const statusDiv = document.getElementById('scanStatus');
+                if(statusDiv) statusDiv.innerHTML = "Menunggu Kamera Diaktifkan...";
+            } catch (err) {
+                console.error("Gagal mematikan sensor kamera:", err);
             }
         }
+    }
 
-        function logout() {
-            if(confirm("Apakah Anda yakin ingin keluar?")) {
-                sessionStorage.clear();
-                window.location.href = "index.html";
-            }
+    // LOGOUT SESSION MANAGEMENT
+    function logout() {
+        if(confirm("Apakah Anda yakin ingin keluar?")) {
+            sessionStorage.clear();
+            window.location.href = "index.html";
         }
+    }
+
+    // TOGGLE RESPONSIVE SIDEBAR NAVIGATION
+    function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        const main = document.getElementById("mainContent");
+        if (!sidebar || !main) return;
+
+        if (sidebarOpen) {
+            sidebar.classList.remove("md:w-64", "w-full");
+            sidebar.classList.add("w-0", "md:w-0", "overflow-hidden", "opacity-0");
+            main.classList.remove("md:pl-64");
+            main.classList.add("md:pl-0");
+        } else {
+            sidebar.classList.remove("w-0", "md:w-0", "overflow-hidden", "opacity-0");
+            sidebar.classList.add("w-full", "md:w-64");
+            main.classList.remove("md:pl-0");
+            main.classList.add("md:pl-64");
+        }
+        sidebarOpen = !sidebarOpen;
+    }
 </script>
 </body>
 </html>
